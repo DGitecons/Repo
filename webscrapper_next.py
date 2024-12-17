@@ -1,81 +1,92 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+import requests
+from bs4 import BeautifulSoup
 import json
+import os
 
-# Configuração do Selenium WebDriver
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Para rodar sem abrir o navegador
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+# URL do site
+url = "https://www.itecons.uc.pt/"
+base_url = "https://www.itecons.uc.pt"
 
-# URL do site de onde queremos extrair as informações
-url = 'https://www.itecons.uc.pt/'
+# Caminho completo onde o ficheiro JSON será salvo
+output_path = r"C:\xampp\htdocs\NEWS\prodWidgets\webscrapper\itecons_next.json"
 
-# Acessar a página
-driver.get(url)
-
-# Aguardar até que os eventos estejam visíveis na página
-WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, 'div.slick-slide')))
-
-# Extrair o título da seção de eventos
-title = driver.find_element(By.CSS_SELECTOR, 'div.text-uppercase.text-center.text-primary.font-weight-light.mb-0.h2').text.strip()
-
-# Localizar todos os eventos
-events = driver.find_elements(By.CSS_SELECTOR, 'div.slick-slide')
-
-# Lista para armazenar os eventos extraídos
-event_data = []
-
-# Loop para percorrer cada evento e extrair as informações
-for event in events:
-    event_info = {}
-
-    try:
-        # Extrair a data
-        date_div = event.find_element(By.CSS_SELECTOR, 'div.card-date')
-        date = date_div.find_element(By.CSS_SELECTOR, 'div.font-weight-bold').text.strip() + " " + date_div.find_element(By.CSS_SELECTOR, 'small').text.strip()
-
-        # Extrair a imagem
-        img = event.find_element(By.CSS_SELECTOR, 'img.card-img-top').get_attribute('src')
-
-        # Extrair o subtítulo
-        subtitle = event.find_element(By.CSS_SELECTOR, 'div.card-title').text.strip()
-
-        # Tentar extrair o texto do elemento <p>
-        try:
-            description = event.find_element(By.CSS_SELECTOR, 'p.card-text.text-uppercase.font-weight-light.font-size-sm').text.strip()
-        except Exception:
-            description = ""  # Define a descrição como string vazia caso não seja encontrada
-
-        # Adicionar as informações ao dicionário
-        event_info['date'] = date
-        event_info['img'] = img
-        event_info['subtitle'] = subtitle
-        event_info['description'] = description  # Sempre adiciona o parâmetro description
-
-        # Adicionar o evento à lista de dados
-        event_data.append(event_info)
-
-    except Exception as e:
-        print(f"Erro ao processar evento: {e}")
-
-# Criar o dicionário final com o título e os eventos
-data = {
-    'title': title,
-    'events': event_data
+# Cabeçalhos para simular um navegador
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 }
 
-# Caminho para salvar o arquivo JSON
-output_path = r'C:\\xampp\\htdocs\\NEWS\\prodWidgets\\webscrapper\\itecons_next.json'
+# Função principal
+def fetch_events_data(url, output_path):
+    try:
+        # Fazer o pedido HTTP
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        
+        # Analisar o HTML com BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # Buscar o título geral da seção
+        section_title_div = soup.find("div", class_="text-uppercase text-center text-primary font-weight-light mb-0 h2")
+        section_title = section_title_div.text.strip() if section_title_div else ""
 
-# Salvar as informações em um arquivo JSON
-with open(output_path, 'w', encoding='utf-8') as json_file:
-    json.dump(data, json_file, indent=4, ensure_ascii=False)
+        # Inicializar a lista para armazenar os eventos
+        events = []
 
-# Fechar o navegador
-driver.quit()
+        # Localizar todos os elementos "card" dentro do carrossel
+        cards = soup.find_all("div", class_="card bg-light")
 
-print(f"Dados salvos em {output_path}")
+        # Iterar por cada card encontrado
+        for card in cards:
+            # Buscar a data do evento
+            date_div = card.find("div", class_="card-date bg-primary text-white text-center")
+            day = date_div.find("div", class_="font-weight-bold mb-0 h5").text.strip() if date_div else ""
+            month = date_div.find("small", class_="text-uppercase").text.strip() if date_div else ""
+
+            # Garantir que o mês esteja em maiúsculas
+            month = month.upper() if month else ""
+
+            # Formatar data como "day month"
+            formatted_date = f"{day} {month}".strip()
+
+            # Buscar o título do evento (subtitle)
+            title_div = card.find("div", class_="card-title text-uppercase mt-2 h6")
+            subtitle = title_div.text.strip() if title_div else ""
+
+            # Buscar a descrição do evento
+            description_div = card.find("p", class_="card-text text-uppercase font-weight-light font-size-sm")
+            description = description_div.text.strip() if description_div else ""
+
+            # Buscar a imagem do evento
+            img_tag = card.find("img", class_="card-img-top")
+            img_src = img_tag["src"] if img_tag else ""
+            img_url = f"{base_url}{img_src}" if img_src else ""
+
+            # Adicionar os dados à lista de eventos
+            events.append({
+                "date": formatted_date,
+                "img": img_url,
+                "subtitle": subtitle,
+                "description": description
+            })
+
+        # Criar diretórios caso não existam
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        # Salvar os dados em um ficheiro JSON com a estrutura solicitada
+        output_data = {
+            "title": section_title,
+            "events": events
+        }
+
+        with open(output_path, "w", encoding="utf-8") as json_file:
+            json.dump(output_data, json_file, ensure_ascii=False, indent=4)
+
+        print(f"Os dados foram extraídos e salvos em '{output_path}'.")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar o site: {e}")
+    except Exception as e:
+        print(f"Ocorreu um erro: {e}")
+
+# Executar a função
+fetch_events_data(url, output_path)
