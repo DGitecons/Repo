@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Vídeos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
+        body {
+           cursor: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: rgb(0, 0, 0);
+            font-family: "Avenir LT Std", sans-serif;
+        }
+        /*Container do Vídeo */
+        #video-container {
+            position: relative;
+            width: 100%;
+            height: 40%;
+            background-color: black;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #logo {
+            position: absolute;
+            top: 1vh;
+            left: 5vw;
+            z-index: 100;
+            width: 220px;
+            height: auto;
+        }
+        #title-overlay {
+            position: absolute;
+            top: 35vh;
+            left: 10%;
+            transform: translateY(-50%);
+            text-align: left;
+            z-index: 100;
+            color: #ffffff;
+            font-weight: 300;
+            font-family: "Avenir LT Std", sans-serif;
+            text-shadow: black 2px 2px 20px;
+        }
+        #main-title {
+            font-size: 8rem;
+            margin-bottom: 0.5rem;
+        }
+        #subtitle {
+            font-size: 2.8rem;
+        }
+        .content-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+            background-color: white;
+        }
+        .content-container.hidden {
+            display: none;
+        }
+        /* White containers. Serviços/Próximos eventos/ Notícias*/
+        #white-container {
+            position: absolute;
+            bottom: 0;
+            width: 98.9%;
+            height: 50%;
+            background-color: white;
+            z-index: 10;
+            padding: 10px;
+            overflow: hidden;
+            border-radius: 70px 70px 0px 0px;
+        }
+        .qr-code-img {
+            position: absolute;
+            top: 418px;  /* Distância do topo */
+            right: 14px;  /* Distância da direita */
+            width: 131px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            background-color: white;
+            visibility: hidden;  /* Inicialmente invisível */
+            opacity: 0;
+            transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+        }
+        .qr-code-img2.visible {
+            opacity: 1; /* Torna visível */
+            visibility: visible; /* Permite exibição */
+        }
+        .qr-code-img2 {
+            position: absolute;
+            top: 87.3%;  /* Distância do topo */
+            right: -8px;  /* Distância da direita */
+            width: 131px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            background-color: white;
+            visibility: hidden;  /* Inicialmente invisível */
+            opacity: 0;
+            transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+        }
+        .qr-code-img2.visible {
+            opacity: 1; /* Torna visível */
+            visibility: visible; /* Permite exibição */
+        }
+
+        .qr-code-img3 {
+            position: absolute;
+            top: 85.5%;  /* Distância do topo */
+            right: 14px;  /* Distância da direita */
+            width: 131px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            background-color: white;
+        }
+        .qr-code-img4 {
+            position: absolute;
+            top: 85.6%;  /* Distância do topo */
+            right: 14px;  /* Distância da direita */
+            width: 131px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            background-color: white;
+        }
+        .arrow-icon {
+            position: absolute;
+            top: 89.5%;  /* Distância do topo */
+            right: 140px;  /* Distância da direita */
+            width: 38px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            transform: rotate(90deg);
+            visibility: hidden;  /* Inicialmente invisível */
+            opacity: 0;
+            transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+        }
+        .arrow-icon.visible {
+            opacity: 1; /* Torna visível */
+            visibility: visible; /* Permite exibição */
+        }
+        .arrow-icon2 {
+            position: absolute;
+            top: 95.8%;  /* Distância do topo */
+            right: 120px;  /* Distância da direita */
+            width: 38px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            transform: rotate(90deg);
+            visibility: hidden;  /* Inicialmente invisível */
+            opacity: 0;
+            transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+        }
+        .arrow-icon2.visible {
+            opacity: 1; /* Torna visível */
+            visibility: visible; /* Permite exibição */
+        }
+        .arrow-icon3 {
+            position: absolute;
+            top: 93.8%;  /* Distância do topo */
+            right: 140px;  /* Distância da direita */
+            width: 38px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            transform: rotate(90deg);
+        }
+        .arrow-icon4 {
+            position: absolute;
+            top: 93.8%;  /* Distância do topo */
+            right: 140px;  /* Distância da direita */
+            width: 38px;  /* Tamanho da imagem */
+            height: auto;
+            z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
+            transform: rotate(90deg);
+        }
+        
+        /* Services styles */
+        .services-title {
+            font-family: "Avenir LT Std", sans-serif;
+            font-size: 4.5rem;
+            font-weight: 0;
+            margin-top: 40px;
+            margin-bottom: 30px;
+        
+            color: #0071a0;
+            text-align: center;
+        }
+        .icons-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 90%;
+            gap: 70px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+        .icon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            max-width: 200px;
+            /* Added margin-bottom to ensure space for text */
+            margin-bottom: 20px;
+        }
+        .icon-container img {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        .icon-container:nth-child(3) img {
+            width: 850px;
+            height: 115px;
+            object-fit: contain;
+            margin-bottom: 16px;
+            margin-top: 8px;
+            transform: scale(1);
+        }
+        .icon-container:nth-child(4) img {
+            width: 135px;
+            height: 135px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            margin-top: -10px;
+            transform: scale(1);
+        }
+        .icon-container:last-child img {
+            width: 145px;
+            height: 145px;
+            object-fit: contain;
+            margin-bottom: 3px;
+            margin-top: -10px;
+            transform: scale(1.2);
+        }
+        .icon-text {
+            text-align: center;
+            /* Removed min-height: 0 which was causing the issue */
+            font-family: "Avenir LT Std", sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #646464;
+            max-width: 290px;
+            margin: 0 auto;
+            /* Added to ensure text is visible */
+            position: relative;
+            z-index: 1;
+        }
+        /* Events styles */
+        .event-card {
+            transition: transform 0.3s ease;
+            width: 300px; /* Aumentando a largura dos cards */
+            margin-right: 10px; /* Reduzindo o espaçamento entre os cards */
+            flex-shrink: 0; /* Impede que os cartões encolham */
+            margin-bottom: 10px; /* Reduzindo o espaço entre os cards */
+            position: relative; /* Necessário para posicionar o texto sobre a imagem */
+            border-radius: 0; /* Removendo bordas arredondadas */
+        }
+        .event-card img {
+            max-height: 100%;
+            width: 100%;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            border-radius: 0px;
+        }
+
+        .event-date {
+            position: absolute;
+            top: 0px;
+            left: 20%;
+            transform: translateX(-50%);
+            width: 15%;
+            background-color: #0071a0;
+            color: white;
+            padding: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            z-index: 10;
+        }
+        #eventsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+/*
+.card-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+*/
+        /* News styles */
+        .card-body {
+            padding: 0px; /* Reduzindo o padding dentro do card */
+        }
+        .card-title,
+        .card-description {
+            font-size: 15px;
+            white-space: normal; /* Permite que o texto quebre em várias linhas */
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Limita o texto a 3 linhas */
+            -webkit-box-orient: vertical;
+            font-weight: 500;
+            color: rgb(234, 234, 234);
+        }
+        .card-title {
+            font-size: 16px; /* Tamanho maior para o título */
+            font-weight: 800;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-top: 0px;
+        }
+        .card-text-container {
+            position: absolute;
+            bottom: 4px; /* Faz o container começar da parte inferior da imagem */
+            left: 0;
+            width: 100%; /* Faz com que o container tenha o mesmo width da imagem */
+            background-color: #0070a099; /* Fundo semitransparente para o texto */
+            color: white;
+            padding: 10px;
+            box-sizing: border-box; /* Garantir que o padding não afete a largura do container */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 30%; /* Aumentando a altura para permitir até 3 linhas de descrição */
+        }
+        .card-subtitle {
+            font-size: 14px;
+            color: #555;
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            margin-top: 0px
+        }
+        #newsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        #pageTitle {
+            font-family: "Avenir LT Std", sans-serif;
+            color: #0071a0;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            font-size: 3rem;
+            font-weight: 0;
+        }
+        #newsPageTitle {
+            font-family: "Avenir LT Std", sans-serif;
+            color: #0071a0;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            font-size: 3rem;
+            font-weight: 0;
+        }
+        .hidden {
+            transform: translateX(100%);
+        }
+        .visible {
+            transform: translateX(0);
+        }
+        /* Footer */
+        #blue-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 93%;
+    height: 12vh;
+    background: linear-gradient(135deg, #1496ce, #0071ab);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px 10%;
+    box-sizing: border-box;
+    clip-path: polygon(0% 0, 100% 0, 95% 100%, 0 100%);
+}
+
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 5px 0;
+    gap: 20px;
+}
+
+.footer-image {
+    height: 50px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-image img {
+    height: 100%;
+    width: auto;
+}
+
+.more-info {
+    position: absolute;
+    right: 120px;
+    bottom: 40px;
+    color: #000;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transform: rotate(-56.5deg);
+    text-align: right;
+    font-style: italic;
+    font-family: "Avenir LT Std", Arial, sans-serif;
+    animation: scanMeAnimation 6s ease-in-out infinite;
+}
+
+@keyframes scanMeAnimation {
+    0%, 100% {
+        color: #000;
+        text-shadow: 0 0 2px rgba(0, 53, 133, 0.1);
+        transform: rotate(-56.5deg) scale(1);
+    }
+    40%, 60% {
+        color: #003585;
+        text-shadow: 0 0 5px rgba(0, 53, 133, 0.3);
+        transform: rotate(-56.5deg) scale(1.01);
+    }
+}
+
+        /* Meteo */
+        /* Animação de oscilação (swing) */
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(3deg); }
+            50% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1); }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .current-weather-left img {
+            width: 120px;
+            height: 120px;
+            margin-right: 20px;
+            animation: swing 3s ease-in-out infinite;
+        }
+
+        .forecast-day img {
+            width: 75px;
+            height: 75px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        
+        .weather-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 100%;
+            max-width: 900px;
+        }
+        
+        .current-weather {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .current-weather-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .current-temp {
+            color: #1a1a1a;
+            font-size: 80px;
+            font-weight: bold;
+        }
+        
+        .weather-details {
+            color: #333;
+            text-align: left;
+        }
+        
+        .weather-details div {
+            margin: 4px 0;
+            font-size: 23px;
+        }
+        
+        .current-weather-right {
+            text-align: right;
+        }
+        
+        .current-weather-right h1 {
+            color: #1a1a1a;
+            font-size: 50px;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .current-weather-right h2 {
+            color: #333;
+            font-size: 25px;
+            margin: 0;
+        }
+        
+        .current-weather-right h3 {
+            font-size: 32px;
+            margin: 0;
+            color: #666;
+        }
+        
+        .forecast-container {
+            margin-top: 0vh;
+        }
+        
+        .forecast-container h3 {
+            color: #1a1a1a;
+            font-size: 42px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .forecast {
+            color: #333;
+            display: flex;
+            justify-content: space-around;
+            margin-top: 0vh;
+        }
+        
+        .forecast-day {
+            color: #494949;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: #1a1a1a;
+        }
+        
+/* Estilização geral */
+.custom-chart-container {
+    position: relative;
+    height: 20vh;
+    margin-top: 0vh;
+    border-radius: 8px;
+    padding: 0px;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+/* Configuração para gráficos */
+.custom-chart {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    opacity: 0; /* Começa invisível */
+    visibility: hidden; /* Fora da exibição */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s; /* Transição suave */
+    font-size: 20px;
+    
+}
+
+.wind-container {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    opacity: 0; /* Começa invisível */
+    visibility: hidden; /* Fora da exibição */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s; /* Transição suave */
+    font-size: 20px;
+    
+}
+.custom-chart.visible,
+.wind-container.visible {
+    opacity: 1; /* Torna visível */
+    visibility: visible; /* Permite exibição */
+}
+
+/* Configuração específica para o gráfico de vento */
+.wind-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    max-width: 90%;
+    padding-top: 1vh;
+    margin: 0 auto;
+    gap: 0vw;
+}
+
+        .wind-title {
+            color: #0c75ff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .wind-item {
+    background: linear-gradient(145deg, #3fa4d0, #124796); /*#004fa3, #021634 Cor do fundo interno do item #1496ce, #0071ab */
+    color: #ffffff;
+    border: 1px solid transparent; /* Borda transparente, será substituída pelo gradiente */
+    border-radius: 15px;
+    padding: 2vw;
+    margin: 5px;
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 50px;
+}
+
+        .wind-icon-container {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .wind-icon {
+            max-width: 100%;
+            max-height: 100%;
+            transform-origin: center;
+        }
+
+        .wind-details {
+            font-size: 14px; /* Ajustado para leitura */
+    margin-bottom: 5px; /* Mais espaçamento */
+    font-weight: 500; /* Peso para visibilidade */
+    color: #dce4f1; /* Cor mais suave */
+        }
+        .wind-direction {
+            font-size: 13px;
+    font-style: italic; /* Adicionado estilo para diferenciar */
+    color: #c1d4f3; /* Azul claro para complementar o tema */
+}
+/* windy mapa */
+.meteo-split-container {
+        display: flex;
+        width: 99.9%;
+        height: calc(100% - 12.3vh); /* Ajustado para considerar o footer */
+        gap: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        position: relative; /* Adicionado para posicionamento do QR code */
+    }
+
+    #meteo-content {
+        position: relative; /* Necessário para posicionamento absoluto do QR code */
+        height: 100%;      /* Garante que o container ocupe toda a altura disponível */
+    }
+    .weather-container {
+        flex: 1;
+        max-width: 50%;
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 20px;
+        overflow: hidden;
+    }
+
+    .map-container {
+        flex: 1;
+        position: relative;
+        height: 100%;
+        border-radius: 8px 30px 8px 8px;
+        overflow: hidden;
+    }
+
+    #weather-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+    /* Estilo inicial para a transição */
+    transform: translateY(100%);
+    transition: transform 0.5s ease-in-out;
+}
+
+
+    /* Adjust the custom-chart-container height */
+
+    #widget-noticias {
+            position: relative;
+            width: 12%;
+            display: flex;
+            justify-content: center; /* flex end para ficar no cantinho*/
+            align-items: center;
+            padding: 10px;
+            gap: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+
+        #widget-noticias .barra-container {
+            width: 100px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        #widget-noticias .barra-progresso {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #4c66af, #4ab1c3);
+            transition: width 1s linear;
+            border-radius: 2px;
+        }
+
+        .informacao-paginas {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ponto-pagina {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .ponto-pagina.ativo {
+            background-color: #4c66af;
+        }
+
+        .container-noticias {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .item-noticia {
+            display: none;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            height: 180px;
+            position: relative;
+        }
+
+        .item-noticia.ativo {
+            display: flex;
+        }
+
+        .item-noticia:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .imagem-noticia-container {
+            width: 300px;
+            height: 180px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .item-noticia img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .item-noticia:hover img {
+            transform: scale(1.05);
+        }
+
+        .conteudo-noticia {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex-grow: 1;
+        }
+
+        .item-noticia h3 {
+            font-size: 30px;
+            color: #333;
+            margin: 0;
+            font-weight: bold;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-noticia p {
+            font-size: 22px;
+            color: #6c6c6c;
+            margin: 0;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+        }
+
+        .item-noticia.fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .item-noticia.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        /* THingsboard */
+        iframe {
+            width: 99%;
+            height: 85%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 1s ease-in-out; /* Transição de opacidade */
+        }
+        iframe.active {
+            opacity: 1; /* Torna o iframe visível */
+            z-index: 1;
+        }
+        iframe.inactive {
+            opacity: 0; /* Esconde o iframe */
+            z-index: 0;
+        }
+        /* Snow Container */
+        #snow-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .snowflake {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fall linear infinite, fadeOut ease-out;
+            opacity: 0.7;
+        }
+        .snowflake.circle {
+            background-color: white;
+            border-radius: 50%;
+        }
+        .snowflake.symbol {
+            color: white;
+            text-shadow: 0 0 3px rgba(255,255,255,0.5);
+        }
+        @keyframes fall {
+            from {
+                transform: translateY(-10px);
+            }
+            to {
+                transform: translateY(100vh) translateX(var(--drift-x));
+            }
+        }
+        @keyframes fadeOut {
+            0% { opacity: 0.7; }
+            70% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+   <section id="video-container">
+    <div id="snow-container"></div>
+        <img id="logo" src="https://raw.githubusercontent.com/DGitecons/public/main/%C3%ADcones/itecons-white.png" alt="Logotipo Itecons">
+        
+        <div id="title-overlay">
+            <div id="main-title">itecons</div>
+            <div id="subtitle">18 anos de Investigação e Desenvolvimento Tecnológico</div>
+        </div>
+    </section>
+    <section id="white-container">
+        <!-- Services Content -->
+        <div class="content-container visible" id="services-content">
+            <div class="services-title">Serviços</div>
+            <div class="icons-wrapper">
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/1.%20Ensaios%20Laboratoriais%20%20e%20IN-SITU.png?raw=true" alt="Ensaios Laboratoriais e IN-SITU">
+                    <div class="icon-text">Ensaios Laboratoriais e <i>IN-SITU</i></div>
+                </div>
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/2.%20Consultoria.png?raw=true" alt="Consultoria">
+                    <div class="icon-text">Consultoria</div>
+                </div>
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/3.%20Marca%C3%A7%C3%A3o%20CE%20e%20Avalia%C3%A7%C3%A3o%20T%C3%A9cnica.png?raw=true" alt="Marcação CE e Avaliação Técnica">
+                    <div class="icon-text">Marcação CE e Avaliação Técnica</div>
+                </div>
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/4.%20Investiga%C3%A7%C3%A3o%20e%20Desenvolvimento.png?raw=true" alt="Investigação e Desenvolvimento">
+                    <div class="icon-text">Investigação e Desenvolvimento</div>
+                </div>
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/5.%20Forma%C3%A7%C3%A3o.png?raw=true" alt="Formação">
+                    <div class="icon-text">Formação</div>
+                </div>
+                <div class="icon-container">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/6.%20Eventos.png?raw=true" alt="Eventos">
+                    <div class="icon-text">Eventos</div>
+                </div>
+            </div>
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" id="arrow" alt="Seta" class="arrow-icon">
+            <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/1.%20Services.png?raw=true" id="qrcode" alt="QR Code" class="qr-code-img">
+        </div>
+        <!-- Events Content -->
+        <div class="content-container hidden" id="events-content">
+            <div class="container py-2">
+                <h2 id="pageTitle"></h2>
+                <div id="eventsContainer" class="row g-4">
+                    <!-- Event cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon">
+            <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/2.%20Events.png?raw=true" alt="QR Code" class="qr-code-img">
+        </div>
+        <!-- News Content -->
+        <div class="content-container hidden" id="news-content">
+            <div class="container py-2">
+                <h2 id="newsPageTitle"></h2>
+                <div id="newsContainer" class="row g-4">
+                    <!-- Projects will be inserted here by JavaScript -->
+                </div>
+            </div>
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon">
+            <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/3.%20News.png?raw=true" alt="QR Code" class="qr-code-img">
+        </div>
+        <!-- Meteo content will go here -->
+        <div class="content-container hidden" id="meteo-content">
+            <div class="meteo-split-container">
+                <!-- Left side - Weather info -->
+                <div class="weather-container">
+                    <div class="current-weather">
+                        <div class="current-weather-left">
+                            <img id="icon" src="https://cdn.weatherapi.com/weather/64x64/day/113.png" alt="Ícone Climatérico">
+                            <div>
+                                <div class="current-temp">
+                                    <span id="currentTemp">20.6</span>°C
+                                </div>
+                                <div class="weather-details">
+                                    <div>💧 <strong>Humidade:</strong> <span id="humidity">89%</span></div>
+                                    <div>💨 <strong>Vento:</strong> <span id="wind">35.3 km/h</span></div>
+                                    <div>🌧️ <strong>Chuva:</strong> <span id="chanceOfRain">98%</span></div> </div>  
+                            </div>
+                        </div>
+                        <div class="current-weather-right">
+                            <h1>Meteorologia</h1>
+                            <h2><span id="currentDate"></span></h2>
+                            <h3 id="condition"></h3>
+                        </div>
+                    </div>
+            
+                    <div class="forecast-container">
+                        <h3>Previsão para os Próximos Dias</h3>
+                        <div id="forecast" class="forecast"></div>
+                    </div>
+                    
+                    <div class="custom-chart-container">
+                        <h3 id="chart-title">Precipitação</h3>
+                        <canvas id="precipitationChart" class="custom-chart"></canvas>
+                        <canvas id="temperatureChart" class="custom-chart"></canvas>
+                        <div id="windContainer" class="wind-container">
+                            <h3 class="wind-title">Vento</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right side - Windy Map -->
+                <div class="map-container">
+                    <iframe 
+                        id="weather-iframe"
+                        src="https://embed.windy.com/embed2.html?lat=39.3999&lon=-8.2245&zoom=6&level=surface&overlay=rain&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=&detailLon=&metricWind=default&metricTemp=default&radarRange=-1&play=true">
+                    </iframe>
+                </div>
+            </div>
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" id="arrow2" lt="Seta" class="arrow-icon2">
+            <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/4.%20Meteo.png?raw=true" id="qrcode2" alt="QR Code" class="qr-code-img2">
+        </div>
+    <!-- News Public Content -->
+    <div class="content-container hidden" id="news_RR-content">
+        <div id="widget-noticias">
+            <div class="informacao-paginas" id="infoPaginas">
+                <!-- Pontos serão adicionados aqui via JavaScript -->
+            </div>
+            <div class="barra-container">
+                <div class="barra-progresso" id="barraProgresso"></div>
+            </div>
+        </div>
+        <div class="container-noticias" id="containerNoticias">
+            <!-- Notícias serão carregadas aqui -->
+        </div>
+        <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon3">
+        <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/5.%20RR.png?raw=true" alt="QR Code" class="qr-code-img3">
+       
+    </div>
+        <!-- News Public Content -->
+        <div class="content-container hidden" id="termo1-content">
+            <iframe id="iframe1" src="http://localhost/Code/termo1.php"></iframe>
+            <iframe id="iframe2" src="http://localhost/Code/termo2.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe3" src="http://localhost/Code/termo3.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe4" src="https://thingsboard.itecons.pt/dashboard/872c0570-abee-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
+            <iframe id="iframe5" src="https://thingsboard.itecons.pt/dashboard/2485b1f0-ace3-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon4">
+            <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/6.%20TB.png?raw=true" alt="QR Code" class="qr-code-img4">
+        </div>
+
+        <div class="more-info">
+            + Scan Me!
+        </div>
+    </section>
+
+    <section id="blue-bar"> 
+        <div class="blue-bar-content">
+            <div class="footer-row">
+                <div class="footer-image">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/6.png" alt="Footer 1">
+                </div>
+                <div class="footer-image" style="margin-left: 375px;">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/5.png" alt="Footer 6">
+                </div>
+                <div class="footer-image" style="margin-left: 0px;">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/4.png" alt="Footer 2">
+                </div>
+                <div class="footer-image" style="margin-left: 0px;">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/3.png" alt="Footer 3">
+                </div>
+            </div>
+            <div class="footer-row">
+                <div class="footer-image">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/2.png" alt="Footer 5">
+                </div>
+                <div class="footer-image">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/main/Footer/1.png" alt="Footer 6">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    <script>
+  const snowContainer = document.getElementById('snow-container');
+
+function createSnowflake() {
+    const snowflake = document.createElement('div');
+    snowflake.classList.add('snowflake');
+    
+    const isSymbol = Math.random() < 0.5;
+    snowflake.classList.add(isSymbol ? 'symbol' : 'circle');
+    
+    snowflake.style.left = `${Math.random() * window.innerWidth}px`;
+    
+    if (isSymbol) {
+        snowflake.textContent = '❄';
+        const size = Math.random() * 10 + 5;
+        snowflake.style.fontSize = `${size}px`;
+    } else {
+        const size = Math.random() * 4 + 5;
+        snowflake.style.width = `${size}px`;
+        snowflake.style.height = `${size}px`;
+    }
+    
+    const fallDuration = Math.random() * 10 + 20;
+    snowflake.style.animationDuration = `${fallDuration}s`;
+    
+    const driftX = Math.random() * 100 - 50;
+    snowflake.style.setProperty('--drift-x', `${driftX}px`);
+    
+    snowContainer.appendChild(snowflake);
+    
+    snowflake.addEventListener('animationend', () => {
+        snowflake.remove();
+    });
+}
+
+function startSnowfall() {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentDate = now.getDate();
+    
+    // Verifica se está entre 1º de dezembro e 1º de janeiro
+    if ((currentMonth === 11 && currentDate >= 1) || (currentMonth === 0 && currentDate < 1)) {
+        const snowInterval = setInterval(createSnowflake, 200);
+        
+        // Para o intervalo quando sair do período de neve
+        const stopSnowfall = () => {
+            clearInterval(snowInterval);
+            window.removeEventListener('datechange', stopSnowfall);
+        };
+        
+        window.addEventListener('datechange', stopSnowfall);
+    }
+}
+
+// Inicia a animação de neve
+startSnowfall();
+
+        /* Iframes */
+const termoIframes = ["iframe1", "iframe2", "iframe3", "iframe4", "iframe5"];
+let termoCurrentIndex = 0;
+let termoInterval = null;
+
+function switchIframeTermo() {
+    // Remove 'active' do iframe atual
+    document.getElementById(termoIframes[termoCurrentIndex]).classList.remove("active");
+    document.getElementById(termoIframes[termoCurrentIndex]).classList.add("inactive");
+
+    // Alterna para o próximo iframe
+    termoCurrentIndex = (termoCurrentIndex + 1) % termoIframes.length;
+
+    // Adiciona 'active' ao próximo iframe
+    document.getElementById(termoIframes[termoCurrentIndex]).classList.remove("inactive");
+    document.getElementById(termoIframes[termoCurrentIndex]).classList.add("active");
+}
+
+function startTermoUpdates() {
+    // Reinicia o índice dos iframes
+    termoCurrentIndex = 0;
+
+    // Garante que apenas o primeiro iframe seja ativo inicialmente
+    termoIframes.forEach((iframeId, index) => {
+        const iframe = document.getElementById(iframeId);
+        iframe.classList.toggle("active", index === termoCurrentIndex);
+        iframe.classList.toggle("inactive", index !== termoCurrentIndex);
+    });
+
+    // Inicia a alternância dos iframes
+    if (!termoInterval) {
+        termoInterval = setInterval(switchIframeTermo, 15000);
+    }
+}
+
+function stopTermoUpdates() {
+    if (termoInterval) {
+        clearInterval(termoInterval);
+        termoInterval = null;
+    }
+}
+
+        // Função para entrar em fullscreen
+        function enterFullscreen() {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+
+        // Tenta entrar em fullscreen ao carregar a página
+        window.addEventListener('load', enterFullscreen);
+
+
+        /*news */
+        let noticiasTotais = [];
+        let indiceAtual = 0;
+        let paginaAtual = 1;
+        const NOTICIAS_POR_PAGINA = 4;
+        const INTERVALO_ROTACAO = 20;
+        let intervaloContagem;
+        let tempoDecorrido = 0;
+
+        function carregarRSS() {
+            const urlRSS = 'https://rr.sapo.pt/rss/rssfeed.aspx?section=section_noticias';
+            
+            fetch(urlRSS)
+                .then(response => response.text())
+                .then(data => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, "application/xml");
+
+                    const items = xmlDoc.getElementsByTagName("item");
+                    noticiasTotais = [];
+
+                    for (let i = 0; i < items.length; i++) {
+                        const titulo = items[i].getElementsByTagName("title")[0]?.textContent || "Título não disponível";
+                        const descricao = items[i].getElementsByTagName("description")[0]?.textContent || "";
+                        const urlImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("url");
+                        const tipoImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("type");
+                        
+                        // Adiciona notícia apenas se tiver imagem válida
+                        if (urlImagem && tipoImagem && !["video/mp4", "audio/mp3"].includes(tipoImagem)) {
+                            noticiasTotais.push({ titulo, descricao, urlImagem });
+                        }
+                    }
+
+                    // Verifica se há notícias carregadas
+                    if (noticiasTotais.length > 0) {
+                        atualizarPontosNavegacao();
+                        exibirNoticias();
+                    } else {
+                        console.warn('Nenhuma notícia válida encontrada no RSS.');
+                        exibirMensagemErro();
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar o RSS:', error);
+                    exibirMensagemErro();
+                });
+        }
+
+        function exibirMensagemErro() {
+    const containerNoticias = document.getElementById("containerNoticias");
+    containerNoticias.innerHTML = `
+        <div class="erro-carregamento">
+            <p>Não foi possível carregar as notícias no momento. Tentaremos novamente em breve...</p>
+        </div>
+    `;
+    // Tenta recarregar as notícias após 10 segundos
+    setTimeout(() => {
+        carregarRSS();
+    }, 1000); // 1000 ms = 1 segundos
+}
+
+        function atualizarPontosNavegacao() {
+            const infoPaginas = document.getElementById("infoPaginas");
+            const totalPaginas = Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA);
+            
+            infoPaginas.innerHTML = '';
+            
+            for (let i = 0; i < totalPaginas; i++) {
+                const ponto = document.createElement("div");
+                ponto.classList.add("ponto-pagina");
+                if (i === paginaAtual - 1) {
+                    ponto.classList.add("ativo");
+                }
+                infoPaginas.appendChild(ponto);
+            }
+        }
+
+        function exibirNoticias() {
+    const containerNoticias = document.getElementById("containerNoticias");
+
+    clearInterval(intervaloContagem);
+    tempoDecorrido = 0;
+
+    const pontos = document.querySelectorAll(".ponto-pagina");
+    pontos.forEach((ponto, index) => {
+        ponto.classList.toggle("ativo", index === paginaAtual - 1);
+    });
+
+    containerNoticias.innerHTML = ''; // Reiniciar conteúdo
+    const inicioIndice = (paginaAtual - 1) * NOTICIAS_POR_PAGINA;
+
+    for (let i = 0; i < NOTICIAS_POR_PAGINA; i++) {
+        const indiceNoticia = (inicioIndice + i) % noticiasTotais.length;
+        const noticia = noticiasTotais[indiceNoticia];
+
+        const itemNoticia = document.createElement("div");
+        itemNoticia.classList.add("item-noticia", "ativo", "fade-in");
+
+        itemNoticia.innerHTML = `
+            <div class="imagem-noticia-container">
+                <img src="${noticia.urlImagem}" alt="Imagem da notícia" loading="lazy" 
+                    onerror="this.onerror=null; this.src='fallback-image.jpg';">
+            </div>
+            <div class="conteudo-noticia">
+                <h3>${noticia.titulo}</h3>
+                <p>${noticia.descricao}</p>
+            </div>
+        `;
+
+        containerNoticias.appendChild(itemNoticia);
+    }
+
+    iniciarContagemRegressiva();
+}
+
+
+        function iniciarContagemRegressiva() {
+    const barraProgresso = document.getElementById("barraProgresso");
+
+    tempoDecorrido = 0;
+
+    // Redefinir a largura da barra imediatamente
+    barraProgresso.style.transition = "none"; // Desativar transição para redefinir instantaneamente
+    barraProgresso.style.width = "100%";
+
+    // Pequeno atraso para reiniciar a animação suavemente
+    setTimeout(() => {
+        barraProgresso.style.transition = "width linear"; // Restaurar transição
+        intervaloContagem = setInterval(() => {
+            tempoDecorrido += 0.1;
+            const percentagemRestante = Math.max(0, 100 - (tempoDecorrido / INTERVALO_ROTACAO) * 100);
+            barraProgresso.style.width = `${percentagemRestante}%`;
+
+            if (tempoDecorrido >= INTERVALO_ROTACAO) {
+                clearInterval(intervaloContagem);
+                // Avança para próxima página
+                paginaAtual = paginaAtual % Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA) + 1;
+                exibirNoticias();
+            }
+        }, 100);
+    }, 50); // Delay para garantir a redefinição antes do próximo cálculo
+}
+        // Adiciona erro de imagem e listener de carregamento
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarRSS();
+        })
+
+        function toggleContent() {
+    const sections = [
+        document.getElementById('services-content'),
+        document.getElementById('events-content'),
+        document.getElementById('news-content'),
+        document.getElementById('meteo-content'),
+        document.getElementById('news_RR-content'),
+        document.getElementById('termo1-content')
+    ];
+
+    const durations = [20000, 20000, 20000, 90000, 120000, 75000]; // Tempos em milissegundos para cada seção
+
+    let currentVisibleIndex = sections.findIndex(section => section.classList.contains('visible'));
+    const nextIndex = (currentVisibleIndex + 1) % sections.length;
+
+    const whiteContainer = document.getElementById('white-container');
+    const titleOverlay = document.getElementById('title-overlay');
+    const qrcode2 = document.getElementById('qrcode2');
+    const arrow2 = document.getElementById('arrow2');
+    const qrcode = document.getElementById('qrcode');
+    const arrow = document.getElementById('arrow');
+
+    // Reset all QR codes and arrows to hidden initially
+    qrcode.style.opacity = '0';
+    qrcode.style.visibility = 'hidden';
+    arrow.style.opacity = '0';
+    arrow.style.visibility = 'hidden';
+    qrcode2.style.opacity = '0';
+    qrcode2.style.visibility = 'hidden';
+    arrow2.style.opacity = '0';
+    arrow2.style.visibility = 'hidden';
+
+    whiteContainer.style.transition = 'height 0.5s ease-in-out';
+    titleOverlay.style.transition = 'opacity 0.5s ease-in-out';
+
+    sections.forEach((section, index) => {
+        if (index === nextIndex) {
+            section.classList.toggle('hidden', false);
+            section.classList.toggle('visible', true);
+
+            if(section.id === 'services-content') {
+                // Reset white container height and QR code/arrow for services
+                whiteContainer.style.height = '50%';
+
+                // Immediately hide QR code and arrow
+                qrcode.style.opacity = '0';
+                qrcode.style.visibility = 'hidden';
+                arrow.style.opacity = '0';
+                arrow.style.visibility = 'hidden';
+
+                // Show arrow after a short delay
+                setTimeout(function() {
+                    arrow.style.opacity = '1';
+                    arrow.style.visibility = 'visible';
+                }, 300);
+
+                // Show QR code after the arrow
+                setTimeout(function() {
+                    qrcode.style.opacity = '1';
+                    qrcode.style.visibility = 'visible';
+                }, 500);
+
+                // Ensure title overlay is visible
+                setTimeout(() => {
+                    titleOverlay.style.opacity = '1';
+                    titleOverlay.style.visibility = 'visible';
+                }, 1000);
+            } 
+            else if (section.id === 'events-content' || section.id === 'news-content') {
+                // Reset white container height and show QR code/arrow for events and news
+                whiteContainer.style.height = '50%';
+
+                // Find the specific QR code and arrow for the current section
+                const currentQRCode = document.querySelector(`#${section.id} .qr-code-img`);
+                const currentArrow = document.querySelector(`#${section.id} .arrow-icon`);
+
+                // Directly show QR code and arrow
+                currentQRCode.style.opacity = '1';
+                currentQRCode.style.visibility = 'visible';
+                currentArrow.style.opacity = '1';
+                currentArrow.style.visibility = 'visible';
+
+                // Ensure title overlay is visible
+                setTimeout(() => {
+                    titleOverlay.style.opacity = '1';
+                    titleOverlay.style.visibility = 'visible';
+                }, 1000);
+            }
+            else if (section.id === 'meteo-content' || section.id === 'news_RR-content' || section.id === 'termo1-content') {
+                // For these sections, adjust white container height to 90%
+                whiteContainer.style.height = '90%';
+
+                // Reset and show QR code 2 and arrow 2
+                qrcode2.style.opacity = '0';
+                qrcode2.style.visibility = 'hidden';
+                arrow2.style.opacity = '0';
+                arrow2.style.visibility = 'hidden';
+
+                // Show arrow 2 after a short delay
+                setTimeout(function() {
+                    arrow2.style.opacity = '1';
+                    arrow2.style.visibility = 'visible';
+                }, 300);
+
+                // Show QR code 2 after the arrow
+                setTimeout(function() {
+                    qrcode2.style.opacity = '1';
+                    qrcode2.style.visibility = 'visible';
+                }, 500);
+
+                // Hide title overlay immediately
+                titleOverlay.style.opacity = '0';
+                titleOverlay.style.visibility = 'hidden';
+            } 
+            else {
+                // For other sections, set white container height to 50%
+                whiteContainer.style.height = '50%';
+
+                // Show title overlay after a delay
+                setTimeout(() => {
+                    titleOverlay.style.opacity = '1';
+                    titleOverlay.style.visibility = 'visible';
+                }, 1000);
+            }
+
+            // Content-specific updates
+            if (section.id === 'meteo-content') {
+                startMeteoUpdates();
+            } else {
+                stopMeteoUpdates();
+            }
+
+            if (section.id === 'termo1-content') {
+                startTermoUpdates();
+            } else {
+                stopTermoUpdates();
+            }
+
+            if (section.id === 'news_RR-content') {
+                indiceAtual = 0; // Reset index
+                paginaAtual = 1; // Reset page
+                exibirNoticias(); // Show first batch
+            }
+        } else {
+            section.classList.toggle('visible', false);
+            section.classList.toggle('hidden', true);
+        }
+    });
+
+    // Clear and set next toggle timeout
+    clearTimeout(toggleContent.timeout);
+    toggleContent.timeout = setTimeout(toggleContent, durations[nextIndex]);
+}
+
+// Immediately set the initial visible section to services-content
+function initializeContent() {
+    const servicesContent = document.getElementById('services-content');
+    const whiteContainer = document.getElementById('white-container');
+    const titleOverlay = document.getElementById('title-overlay');
+    const qrcode = document.getElementById('qrcode');
+    const arrow = document.getElementById('arrow');
+
+    // Ensure all other sections are hidden
+    const sections = [
+        'events-content',
+        'news-content',
+        'meteo-content', 
+        'news_RR-content', 
+        'termo1-content'
+    ];
+    sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('hidden');
+            section.classList.remove('visible');
+        }
+    });
+
+    // Show services content
+    servicesContent.classList.remove('hidden');
+    servicesContent.classList.add('visible');
+
+    // Set white container height
+    whiteContainer.style.height = '50%';
+
+    // Show arrow and QR code with delays
+    setTimeout(function() {
+        arrow.style.opacity = '1';
+        arrow.style.visibility = 'visible';
+    }, 300);
+
+    setTimeout(function() {
+        qrcode.style.opacity = '1';
+        qrcode.style.visibility = 'visible';
+    }, 500);
+
+    // Show title overlay
+    setTimeout(() => {
+        titleOverlay.style.opacity = '1';
+        titleOverlay.style.visibility = 'visible';
+    }, 1000);
+
+    // Start the toggle cycle
+    toggleContent.timeout = setTimeout(toggleContent, 20000);
+}
+
+// Call initialization when the page loads
+document.addEventListener('DOMContentLoaded', initializeContent);
+
+
+// Controle de atualização do meteo
+let meteoInterval;
+
+function startMeteoUpdates() {
+    if (!meteoInterval) {
+        meteoInterval = setInterval(changeLayer, 30000); // Alterar camada a cada 30 segundos
+        changeLayer(); // Inicializar a troca imediatamente
+    }
+}
+
+function stopMeteoUpdates() {
+    if (meteoInterval) {
+        clearInterval(meteoInterval);
+        meteoInterval = null;
+    }
+}
+//meteo
+const layers = ['rain', 'severe', 'temp'];
+let currentLayerIndex = 0;
+const iframe = document.getElementById('weather-iframe');
+
+// Função para alterar a camada do mapa
+function changeLayer() {
+    currentLayerIndex = (currentLayerIndex + 1) % layers.length;
+    const layer = layers[currentLayerIndex];
+    iframe.style.transform = 'translateY(100%)'; // Move para fora da tela antes de trocar o conteúdo
+
+    // Troca a camada e recarrega o iframe
+    iframe.src = `https://embed.windy.com/embed2.html?lat=39.3999&lon=-8.2245&zoom=6&level=surface&overlay=${layer}&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=&detailLon=&metricRain=mm&metricWind=km/h&metricTemp=°C&radarRange=-1&message=true&play=true`;
+
+    // Aplica o efeito de transição somente após o iframe ser recarregado
+    iframe.onload = () => {
+        iframe.style.transform = 'translateY(0)'; // Move o iframe de volta para sua posição original
+    };
+}
+
+
+//video    
+         const videos = [
+            {
+                "url": "https://www.itecons.uc.pt/storage/W1siZiIsIjIwMjIvMTIvMDUvODdnajQ3a2V3eV9JdGVjb25zX1Bvc3RfMDIubXA0Il1d?sha=518dbad05e10f01a",
+                "atributos": {
+                    "autoplay": true,
+                    "playsinline": true,
+                    "muted": true,
+                    "preload": "auto"
+                }
+            },
+            {
+                "url": "https://www.itecons.uc.pt/storage/W1siZiIsIjIwMjIvMTIvMDUvaG5mYm5xcDVsX0l0ZWNvbnNfUG9zdF8wNC5tcDQiXV0?sha=2379d467ed6a2e6a",
+                "atributos": {
+                    "autoplay": true,
+                    "playsinline": true,
+                    "muted": true,
+                    "preload": "auto"
+                }
+            },
+            {
+                "url": "https://www.itecons.uc.pt/storage/W1siZiIsIjIwMjIvMTIvMDUvOG5rbnRocm51NF9JdGVjb25zX1Bvc3RfMDMubXA0Il1d?sha=28fdfd2cc00f0c8a",
+                "atributos": {
+                    "autoplay": true,
+                    "playsinline": true,
+                    "muted": true,
+                    "preload": "auto"
+                }
+            },
+            {
+                "url": "https://www.itecons.uc.pt/storage/W1siZiIsIjIwMjIvMTIvMDUvNzl6NGpvZW00el9JdGVjb25zX1Bvc3RfMDEubXA0Il1d?sha=c387c4093f47a02e",
+                "atributos": {
+                    "autoplay": true,
+                    "playsinline": true,
+                    "muted": true,
+                    "preload": "auto"
+                }
+            }
+        ];
+
+        const videoContainer = document.getElementById('video-container');
+        let currentVideoIndex = 0;
+
+        function loadVideo(index) {
+            const currentVideo = document.createElement('video');
+            currentVideo.src = videos[index].url;
+            currentVideo.autoplay = true;
+            currentVideo.playsinline = true;
+            currentVideo.muted = true;
+            currentVideo.preload = "auto";
+            currentVideo.controls = false;
+
+            currentVideo.style.opacity = 0;
+            videoContainer.appendChild(currentVideo);
+
+            setTimeout(() => {
+                currentVideo.style.opacity = 1;
+            }, 100);
+
+            const nextIndex = (index + 1) % videos.length;
+
+            currentVideo.addEventListener('timeupdate', () => {
+                if (currentVideo.duration - currentVideo.currentTime <= 2) {
+                    startFadeOut(currentVideo, nextIndex);
+                }
+            });
+        }
+
+        function startFadeOut(video, nextIndex) {
+            video.style.opacity = 0;
+
+            setTimeout(() => {
+                videoContainer.removeChild(video);
+                loadVideo(nextIndex);
+            }, 1000);
+        }
+
+        loadVideo(currentVideoIndex);
+
+// Função para carregar e atualizar eventos
+async function loadEvents() {
+    try {
+        const response = await fetch('itecons_next.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        const container = document.getElementById('eventsContainer');
+        const pageTitle = document.getElementById('pageTitle');
+
+        // Limpa o contêiner antes de adicionar novos eventos
+        container.innerHTML = '';
+
+        // Atualiza o título da página com o título do JSON
+        pageTitle.textContent = data.title;
+
+                // Itera pelos eventos
+        data.events.slice(0, 5).forEach(event => {
+            const eventCard = document.createElement('div');
+            eventCard.className = 'event-card';
+            eventCard.innerHTML = `
+                <div class="card">
+                    <div class="event-date">${event.date}</div>
+                    <img src="${event.img}" class="card-img-top" alt="Event Image">
+                    <div class="card-body">
+                        <div class="card-text-container">
+                            <h5 class="card-title">${event.subtitle}</h5>
+                            <p class="card-description">${event.description}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(eventCard);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar eventos:', error);
+        const container = document.getElementById('eventsContainer');
+        container.innerHTML = '<div class="alert alert-danger">Erro ao carregar eventos</div>';
+    }
+}
+
+// Função para carregar e atualizar notícias
+async function loadNews() {
+    try {
+        const response = await fetch('itecons_news.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const newsData = await response.json();
+        
+        const container = document.getElementById('newsContainer');
+        const pageTitle = document.getElementById('newsPageTitle');
+
+        // Limpa o contêiner antes de adicionar novas notícias
+        container.innerHTML = '';
+
+        pageTitle.textContent = 'Notícias';
+
+        newsData.slice(0, 5).forEach(newsItem => {
+            const newsCard = document.createElement('div');
+            newsCard.className = 'event-card';
+            newsCard.innerHTML = `
+                <div class="card">
+                    <img src="${newsItem.imagem}" class="card-img-top" alt="News Image">
+                    <div class="card-body">
+                        <div class="card-text-container">
+                            <h5 class="card-title">${newsItem.titulo}</h5>
+                            <p class="card-description">${newsItem.descricao}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(newsCard);
+        });
+    } catch (error) {
+        console.error('Detailed error loading news:', error);
+        const container = document.getElementById('newsContainer');
+        container.innerHTML = `<div class="alert alert-danger">Error loading news: ${error.message}</div>`;
+    }
+}
+
+// Função para carregar todos os conteúdos
+async function loadAllContent() {
+    await Promise.all([loadEvents(), loadNews()]);
+}
+
+// Carregar conteúdo inicialmente
+loadAllContent();
+
+// Atualizar conteúdo a cada 5 minutos (300000 milissegundos)
+setInterval(loadAllContent, 20000);
+
+// Adicionar event listener para atualização manual (opcional)
+document.addEventListener('DOMContentLoaded', () => {
+    const refreshButton = document.getElementById('refreshButton');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', loadAllContent);
+    }
+});
+
+// Add this to the existing <script> section in the HTML
+    function createElaboratedClock() {
+    const clockContainer = document.createElement('div');
+    clockContainer.id = 'elaborated-digital-clock';
+    clockContainer.style.position = 'absolute';
+    clockContainer.style.top = '16px';
+    clockContainer.style.right = '20px';
+    clockContainer.style.display = 'flex';
+    clockContainer.style.alignItems = 'center';
+    clockContainer.style.backgroundColor = 'transparent';
+    clockContainer.style.padding = '10px';
+    clockContainer.style.borderRadius = '10px';
+    clockContainer.style.fontFamily = '"Avenir LT Std", sans-serif';
+    clockContainer.style.color = 'white';
+    clockContainer.style.zIndex = '110';
+
+    const dateElement = document.createElement('div');
+    dateElement.id = 'clock-date';
+    dateElement.style.marginRight = '15px';
+    dateElement.style.fontSize = '2.2rem';
+    dateElement.style.minWidth = '250px'; // Ensure consistent width
+    dateElement.style.textAlign = 'right'; // Align text to right for consistent positioning
+
+    const separatorElement = document.createElement('div');
+    separatorElement.style.width = '4px';
+    separatorElement.style.height = '50px';
+    separatorElement.style.borderRadius = '40px';
+    separatorElement.style.backgroundColor = 'white';
+    separatorElement.style.position = 'absolute';
+    separatorElement.style.left = '64.7%';
+    separatorElement.style.transform = 'translateX(-50%)';
+    separatorElement.style.top = '6px';
+
+    const timeElement = document.createElement('div');
+    timeElement.id = 'clock-time';
+    timeElement.style.fontSize = '2.3rem';
+    timeElement.style.fontWeight = 'bold';
+    timeElement.style.display = 'flex';
+    timeElement.style.minWidth = '140px'; // Fixed width for consistent layout
+    timeElement.style.fontFamily = 'monospace'; // Use monospaced font for equal-width digits
+
+    clockContainer.appendChild(dateElement);
+    clockContainer.appendChild(separatorElement);
+    clockContainer.appendChild(timeElement);
+
+    document.getElementById('video-container').appendChild(clockContainer);
+
+    function updateClock() {
+        const now = new Date();
+
+        // Date formatting
+        const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+        const dayNumber = now.getDate();
+        const monthName = months[now.getMonth()];
+        const year = now.getFullYear();
+
+        dateElement.innerHTML = `<strong>${dayNumber}</strong> <strong>${monthName}</strong> <strong>${year}</strong>`;
+
+        // Time formatting
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
+// Call the function to create and start the clock
+createElaboratedClock();
+
+
+let precipitationChart = null;
+        let temperatureChart = null;
+        let currentChartIndex = 0;
+        const apiKey = '902107a444f64e3ead8132719240710';
+        const city = 'Coimbra';
+        const apiURL = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5&lang=pt`;
+
+function switchCharts() {
+    const precipitationChartCanvas = document.getElementById('precipitationChart');
+    const temperatureChartCanvas = document.getElementById('temperatureChart');
+    const windContainer = document.getElementById('windContainer');
+    const chartTitle = document.getElementById('chart-title');
+
+
+    // Lista dos elementos e títulos
+    const charts = [precipitationChartCanvas, temperatureChartCanvas, windContainer];
+    const titles = ['Precipitação', 'Temperatura', 'Vento'];
+
+    // Remove a classe 'visible' de todos os gráficos
+    charts.forEach((chart) => chart.classList.remove('visible'));
+
+    // Adiciona a classe 'visible' ao próximo gráfico
+    charts[currentChartIndex].classList.add('visible');
+    chartTitle.textContent = titles[currentChartIndex];
+
+    // Atualiza o índice para o próximo gráfico
+    currentChartIndex = (currentChartIndex + 1) % charts.length;
+}
+
+// Exemplo: alternar os gráficos a cada 5 segundos
+setInterval(switchCharts, 10000);
+
+        async function getWeatherData() {
+            try {
+                const response = await fetch(apiURL);
+                const data = await response.json();
+                
+                displayCurrentWeather(data);
+                displayForecast(data);
+                await updateOrCreatePrecipitationChart(data);
+                await updateOrCreateTemperatureChart(data);
+                await updateWindData(data);
+                
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        }
+// Adicionar função para atualizar dados do vento
+async function updateWindData(data) {
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+    const hourlyWind = [];
+    let totalHours = 0;
+    // Primeiro, adicionar a hora atual
+    const currentForecastDay = data.forecast.forecastday[0];
+    const currentHourData = currentForecastDay.hour.find(hour => {
+        const hourDate = new Date(hour.time);
+        return hourDate.getHours() === currentHour;
+    });
+    if (currentHourData) {
+        hourlyWind.push({
+            time: currentHourData.time,
+            wind_dir: currentHourData.wind_dir,
+            wind_kph: currentHourData.wind_kph,
+            wind_degree: currentHourData.wind_degree
+        });
+        totalHours++;
+    }
+    // Depois adicionar as próximas horas
+    for (const day of data.forecast.forecastday) {
+        for (const hour of day.hour) {
+            const hourDate = new Date(hour.time);       
+            // Pular horas anteriores à atual
+            if (hourDate < currentDate) {
+                continue;
+            }
+            // Adicionar previsões a cada 3 horas após a hora atual
+            if (hourDate > currentDate && (hourDate.getHours() - currentHour) % 3 === 0) {
+                hourlyWind.push({
+                    time: hour.time,
+                    wind_dir: hour.wind_dir,
+                    wind_kph: hour.wind_kph,
+                    wind_degree: hour.wind_degree
+                });
+                totalHours++;
+            }
+
+            if (totalHours >= 6) break;
+        }
+        if (totalHours >= 6) break;
+    }
+    // Gerar HTML para os dados do vento
+    const windDataHtml = hourlyWind.slice(0, 6).map(hour => {
+        const rotation = hour.wind_degree;
+        const isHighWind = hour.wind_kph > 30;   
+        let iconSize;
+        if (hour.wind_kph <= 10) iconSize = 20;
+        else if (hour.wind_kph <= 20) iconSize = 25;
+        else if (hour.wind_kph <= 30) iconSize = 30;
+        else if (hour.wind_kph <= 40) iconSize = 35;
+        else if (hour.wind_kph <= 50) iconSize = 40;
+        else iconSize = 45;
+
+        return `
+            <div class="wind-item">
+                <div class="wind-speed">${hour.wind_kph} km/h</div>
+                <div class="wind-icon-container">
+                    <img src="https://raw.githubusercontent.com/DGitecons/arrow_Icons/main/transparent_arrow.png" 
+                         class="wind-icon ${isHighWind ? 'high-wind' : ''}"
+                         style="width: ${iconSize}px; height: ${iconSize}px; transform: rotate(${rotation}deg);"
+                         alt="Direção do Vento">
+                </div>
+                <div class="wind-details">${hour.time.slice(-5)}</div>
+                <div class="wind-direction">${hour.wind_dir}</div>
+            </div>
+        `;
+    }).join('');
+    document.getElementById('windContainer').innerHTML = `
+        <h3 class="wind-title"></h3>
+        ${windDataHtml}
+    `;
+}
+        // Restante do código de precipitação (updateOrCreatePrecipitationChart) inalterado
+        async function updateOrCreatePrecipitationChart(data) {
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentHour = currentDate.getHours();
+    const forecastDays = data.forecast.forecastday;
+    const hourlyPrecipitation = [];
+    const currentDay = forecastDays.find(day => day.date === currentDateString);
+    if (currentDay) {
+        currentDay.hour.forEach(hour => {
+            const hourDate = new Date(hour.time);
+            if (hourDate.getHours() >= currentHour && hourDate.toISOString().split('T')[0] === currentDateString) {
+                hourlyPrecipitation.push(hour.precip_mm);
+            }
+        });
+    }
+    const nextDay = forecastDays.find(day => day.date === getNextDate(currentDateString));
+    if (nextDay) {
+        nextDay.hour.forEach(hour => {
+            const hourDate = new Date(hour.time);
+            if (hourDate.getHours() <= currentHour) {
+                hourlyPrecipitation.push(hour.precip_mm);
+            }
+        });
+    }
+    const ctx = document.getElementById('precipitationChart').getContext('2d');
+    const gradientBg = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientBg.addColorStop(0, 'rgba(54, 162, 235, 0.8)');
+    gradientBg.addColorStop(1, 'rgba(54, 162, 235, 0.1)');
+    const labels = Array.from({ length: hourlyPrecipitation.length }, (_, i) => `${(currentHour + i) % 24}:00`);
+    if (!precipitationChart) {
+        precipitationChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Precipitação',
+                    data: hourlyPrecipitation,
+                    backgroundColor: gradientBg,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    borderRadius: {
+                        topLeft: 8,
+                        topRight: 8,
+                        bottomLeft: 0,
+                        bottomRight: 0
+                    },
+                    barThickness: 24,
+                    hoverBackgroundColor: 'rgba(72, 202, 255, 0.8)',
+                    hoverBorderColor: 'rgba(72, 202, 255, 1)',
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        title: { 
+                            display: true, 
+                            text: 'Precipitação (mm)', 
+                            color: '#000',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                            },
+                            padding: {top: 20, bottom: 10}
+                        },
+                        ticks: {
+                            color: '#000',
+                            font: {
+                                size: 12,
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                            },
+                            padding: 10,
+                            callback: function(value) {
+                                return value + ' mm';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(5, 5, 5, 0.08)',
+                            drawBorder: false,
+                            lineWidth: 0.5
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: { 
+                        ticks: {
+                            color: '#000',
+                            font: {
+                                size: 12,
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                            },
+                            padding: 8,
+                            maxRotation: 90,
+                            autoSkip: false,
+                            maxTicksLimit: 24
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold',
+                            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                        },
+                        bodyFont: {
+                            size: 13,
+                            family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                        },
+                        padding: {
+                            x: 15,
+                            y: 12
+                        },
+                        displayColors: false,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return `${tooltipItems[0].label}`;
+                            },
+                            label: function(context) {
+                                const value = context.raw;
+                                if (value === 0) {
+                                    return 'Sem precipitação prevista';
+                                }
+                                return `Precipitação: ${value} mm`;
+                            }
+                        },
+                        cornerRadius: 8,
+                        caretSize: 6
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                hover: {
+                    mode: 'nearest',
+                    intersect: true,
+                    animationDuration: 0
+                },
+                onHover: (event, elements) => {
+                    event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
+                },
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        top: 20,
+                        bottom: 10
+                    }
+                }
+            }
+        });
+    } else {
+        precipitationChart.data.labels = labels;
+        precipitationChart.data.datasets[0].data = hourlyPrecipitation;
+        precipitationChart.update('none');
+    }
+    window.addEventListener('resize', () => {
+        precipitationChart.resize();
+    });
+}
+
+async function updateOrCreateTemperatureChart(data) {
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const currentHour = currentDate.getHours();
+    const forecastDays = data.forecast.forecastday;
+    const hourlyTemperatures = [];
+
+    const currentDay = forecastDays.find(day => day.date === currentDateString);
+    if (currentDay) {
+        const todayHours = currentDay.hour;
+        for (let hour of todayHours) {
+            const hourDate = new Date(hour.time);
+            if (hourDate.getHours() >= currentHour && hourDate.toISOString().split('T')[0] === currentDateString) {
+                hourlyTemperatures.push(hour);
+            }
+        }
+    }
+    const nextDay = forecastDays.find(day => day.date === getNextDate(currentDateString));
+    if (nextDay) {
+        const tomorrowHours = nextDay.hour;
+        for (let hour of tomorrowHours) {
+            const hourDate = new Date(hour.time);
+            if (hourDate.getHours() <= currentHour && hourDate.toISOString().split('T')[0] === getNextDate(currentDateString)) {
+                hourlyTemperatures.push(hour);
+            }
+        }
+    }
+    const labels = [];
+    const temperatures = [];
+    for (let i = 0; i < hourlyTemperatures.length; i += 2) {
+        const hour = new Date(hourlyTemperatures[i].time);
+        labels.push(`${hour.getHours()}:${hour.getMinutes() < 10 ? '0' : ''}${hour.getMinutes()}`);
+        temperatures.push(hourlyTemperatures[i].temp_c);
+    }
+    const minTemp = Math.min(...temperatures);
+    const maxTemp = Math.max(...temperatures);
+    const tempRange = maxTemp - minTemp;   
+    const margin = Math.max(2, tempRange * 0.2);
+    const ctx = document.getElementById('temperatureChart').getContext('2d');
+    if (!temperatureChart) {
+        temperatureChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Temperatura (°C)',
+                    data: temperatures,
+                    borderColor: '#FFC300',
+                    backgroundColor: 'rgba(255, 195, 0, 0.5)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.4,
+                    cubicInterpolationMode: 'monotone'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 40,    // Aumentado de 20 para 40
+                        right: 40,   // Aumentado de 20 para 40
+                        top: 20,
+                        bottom: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#000',
+                        },
+                        grid: {
+                            display: false
+                        },
+                        min: -1,      // Alterado de -0.5 para -1
+                        max: labels.length - 0.5
+                    },
+                    y: {
+                        display: false,
+                        grid: {
+                            display: false
+                        },
+                        min: Math.floor(minTemp - margin),
+                        max: Math.ceil(maxTemp + margin)
+                    }
+                }
+            },
+            plugins: [{
+                afterDatasetsDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    chart.data.datasets.forEach(function(dataset, i) {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach(function(point, index) {
+                            const value = dataset.data[index];
+                            ctx.fillStyle = '#000';
+                            ctx.font = 'bold 14px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(value + '°C', point.x, point.y - 10);
+                        });
+                    });
+                }
+            }]
+        });
+    } else {
+        temperatureCtoghart.data.labels = labels;
+        temperatureChart.data.datasets[0].data = temperatures;
+        temperatureChart.options.scales.x.max = labels.length - 0.5;
+        temperatureChart.options.scales.y.min = Math.floor(minTemp - margin);
+        temperatureChart.options.scales.y.max = Math.ceil(maxTemp + margin);
+        temperatureChart.update('none');
+    }
+}
+        function displayCurrentWeather(data) {
+            const currentConditions = data.current;
+            document.getElementById('currentTemp').textContent = currentConditions.temp_c;
+            document.getElementById('humidity').textContent = currentConditions.humidity + '%';
+            document.getElementById('wind').textContent = currentConditions.wind_kph + ' km/h';
+            document.getElementById('chanceOfRain').textContent = data.forecast.forecastday[0].day.daily_chance_of_rain + '%';
+            document.getElementById('icon').src = `https:${currentConditions.condition.icon}`;
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-PT', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('condition').textContent = currentConditions.condition.text;
+        }
+        function displayForecast(data) {
+            const forecastHtml = data.forecast.forecastday.slice(1).map(forecast => {
+                const date = new Date(forecast.date).toLocaleDateString('pt-PT', { weekday: 'long' });
+                const max = forecast.day.maxtemp_c;
+                const min = forecast.day.mintemp_c;
+                const icon = forecast.day.condition.icon;
+                return `
+                    <div class="forecast-day">
+                        <div>${date}</div>
+                        <img src="https:${icon}" alt="Ícone de clima">
+                        <div>${max}°C / ${min}°C</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('forecast').innerHTML = forecastHtml;
+        }
+
+        function getNextDate(currentDateString) {
+            const currentDate = new Date(currentDateString);
+            const nextDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+            return nextDate.toISOString().split('T')[0];
+        }
+
+        getWeatherData();
+        setInterval(getWeatherData, 60000);
+
+    </script>
+</body>
+</html>
