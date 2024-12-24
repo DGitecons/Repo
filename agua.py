@@ -235,64 +235,81 @@ class WaterLogAlertSystem:
         return records_sent
 
     def login_and_extract_table_data(self):
-        os.makedirs(self.export_dir, exist_ok=True)
-        attempt_count = 0
-        max_attempts = 3
-        while attempt_count < max_attempts:
-            attempt_count += 1
-            chrome_options = Options()
-            chrome_options.add_argument("--headless")
-            chrome_options.add_argument("--no-sandbox")
-            chrome_options.add_argument("--disable-dev-shm-usage")
-            chrome_options.add_argument("--disable-gpu")
-            try:
-                service = Service('/usr/lib/chromium-browser/chromedriver')
-                driver = webdriver.Chrome(service=service, options=chrome_options)
-                driver.get(self.login_url)
-                username_field = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.ID, "Username")))
-                password_field = driver.find_element(By.ID, "Password")
-                username_field.send_keys(self.username)
-                password_field.send_keys(self.password)
-                login_button = driver.find_element(By.XPATH, "//input[@type='submit' and @value='Log in']")
-                login_button.click()
-                WebDriverWait(driver, 80).until(EC.url_contains("/waterlog/Sensor/Daily"))
-                hourly_link = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.XPATH, "//a[@href='/waterlog/Sensor/Hourly']")))
-                hourly_link.click()
-                WebDriverWait(driver, 80).until(EC.url_contains("/waterlog/Sensor/Hourly"))
-                length_select = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.NAME, "DataTables_Table_0_length")))
-                length_options = length_select.find_elements(By.TAG_NAME, "option")
-                for option in length_options:
-                    if option.get_attribute("value") == "1000":
-                        option.click()
-                        break
-                time.sleep(5)
-                table_rows = driver.find_elements(By.XPATH, "//tbody/tr")
-                new_records = []
-                for row in table_rows:
-                    cells = row.find_elements(By.TAG_NAME, "td")
-                    if len(cells) >= 5:
-                        record = {
-                            "sensor_id": cells[0].text,
-                            "timestamp": cells[2].text,
-                            "consumo": self.parse_float(cells[3].text),
-                            "total_consumo": self.parse_float(cells[4].text)
-                            }
-                        new_records.append(record)
-                new_records = self.calculate_daily_consumption(new_records)
-                records_sent = self.process_new_records(new_records)
-                exceeded_sensors = self.check_consumption_alert(new_records)
-                logging.info(f"Processed {len(new_records)} records, sent {records_sent} to ThingsBoard")
-                return True, exceeded_sensors
-            except Exception as e:
-                logging.error(f"Attempt {attempt_count} failed during data extraction: {e}")
-                if attempt_count < max_attempts:
-                    logging.info(f"Retrying... Attempt {attempt_count + 1}/{max_attempts}")
-                    time.sleep(2 ** attempt_count)
-                else:
-                    logging.error("Maximum attempts reached. Failing operation.")
-                    return False, []
-            finally:
-                driver.quit()
+    os.makedirs(self.export_dir, exist_ok=True)
+    attempt_count = 0
+    max_attempts = 3
+    driver = None
+
+    while attempt_count < max_attempts:
+        attempt_count += 1
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        
+        try:
+            service = Service('/usr/lib/chromium-browser/chromedriver')
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+            
+            driver.get(self.login_url)
+            username_field = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.ID, "Username")))
+            password_field = driver.find_element(By.ID, "Password")
+            username_field.send_keys(self.username)
+            password_field.send_keys(self.password)
+            login_button = driver.find_element(By.XPATH, "//input[@type='submit' and @value='Log in']")
+            login_button.click()
+            
+            WebDriverWait(driver, 80).until(EC.url_contains("/waterlog/Sensor/Daily"))
+            hourly_link = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.XPATH, "//a[@href='/waterlog/Sensor/Hourly']")))
+            hourly_link.click()
+            
+            WebDriverWait(driver, 80).until(EC.url_contains("/waterlog/Sensor/Hourly"))
+            length_select = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.NAME, "DataTables_Table_0_length")))
+            length_options = length_select.find_elements(By.TAG_NAME, "option")
+            for option in length_options:
+                if option.get_attribute("value") == "1000":
+                    option.click()
+                    break
+            
+            time.sleep(5)
+            
+            table_rows = driver.find_elements(By.XPATH, "//tbody/tr")
+            new_records = []
+            
+            for row in table_rows:
+                cells = row.find_elements(By.TAG_NAME, "td")
+                if len(cells) >= 5:
+                    record = {
+                        "sensor_id": cells[0].text,
+                        "timestamp": cells[2].text,
+                        "consumo": self.parse_float(cells[3].text),
+                        "total_consumo": self.parse_float(cells[4].text)
+                    }
+                    new_records.append(record)
+            
+            new_records = self.calculate_daily_consumption(new_records)
+            records_sent = self.process_new_records(new_records)
+            exceeded_sensors = self.check_consumption_alert(new_records)
+            
+            logging.info(f"Processed {len(new_records)} records, sent {records_sent} to ThingsBoard")
+            return True, exceeded_sensors
+            
+        except Exception as e:
+            logging.error(f"Attempt {attempt_count} failed during data extraction: {e}")
+            if attempt_count < max_attempts:
+                logging.info(f"Retrying... Attempt {attempt_count + 1}/{max_attempts}")
+                time.sleep(2 ** attempt_count)
+            else:
+                logging.error("Maximum attempts reached. Failing operation.")
+                return False, []
+                
+        finally:
+            if driver:
+                try:
+                    driver.quit()
+                except Exception as e:
+                    logging.error(f"Error closing driver: {e}")
 
 def main():
     login_url = "https://www.goreadycloud02.com/waterlog/Account/Login?ReturnUrl=%2Fwaterlog%2FSensor%2FDaily"
