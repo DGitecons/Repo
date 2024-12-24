@@ -4,11 +4,12 @@ import smtplib
 import requests
 from email.message import EmailMessage
 from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import logging
 from datetime import datetime, timedelta
@@ -139,7 +140,7 @@ class WaterLogAlertSystem:
                 subject = f"✅ RELATÓRIO {date_range}: Nenhum Registo Excedeu o Limite de Consumo"
                 message_body = f"RELATÓRIO DE CONSUMO DE ÁGUA - {date_range}\n"
                 message_body += f"Período de Análise: {start_date.strftime('%Y-%m-%d %H:%M')} até {now.strftime('%Y-%m-%d %H:%M')}\n"
-                message_body += f"\nLimite Máximo por Hora: {self.max_hourly_consumption}\n"
+                message_body += f"\nLimite Máximo por Hora: {self.max_hourly_consumption}\n\n"
                 message_body += "NENHUM REGISTO EXCEDEU O LIMITE DE CONSUMO NO PERÍODO ANALISADO.\n"
             else:
                 subject = f"⚠️ RELATÓRIO {date_range}: {len(exceeded_sensors)} Registos Excederam o Limite de Consumo"
@@ -253,19 +254,12 @@ class WaterLogAlertSystem:
 
         while attempt_count < max_attempts:
             attempt_count += 1
-            firefox_options = Options()
-            firefox_options.add_argument("--headless")
-            firefox_binary = "/usr/bin/firefox-esr"
-            if os.path.exists(firefox_binary):
-                firefox_options.binary_location = firefox_binary
-            
-            service = Service('geckodriver')
-            
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            service = Service(ChromeDriverManager().install())
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+
             try:
-                driver = webdriver.Firefox(service=service, options=firefox_options)
-                driver.set_window_size(1920, 1080)
-                driver.set_page_load_timeout(30)
-                
                 driver.get(self.login_url)
                 username_field = WebDriverWait(driver, 80).until(EC.presence_of_element_located((By.ID, "Username")))
                 password_field = driver.find_element(By.ID, "Password")
@@ -286,7 +280,7 @@ class WaterLogAlertSystem:
                         option.click()
                         break
 
-                time.sleep(7)
+                time.sleep(5)
 
                 table_rows = driver.find_elements(By.XPATH, "//tbody/tr")
                 new_records = []
@@ -318,10 +312,7 @@ class WaterLogAlertSystem:
                     logging.error("Maximum attempts reached. Failing operation.")
                     return False, []
             finally:
-                try:
-                    driver.quit()
-                except Exception as e:
-                    logging.error(f"Error closing driver: {e}")
+                driver.quit()
 
 def main():
     login_url = "https://www.goreadycloud02.com/waterlog/Account/Login?ReturnUrl=%2Fwaterlog%2FSensor%2FDaily"
@@ -334,7 +325,7 @@ def main():
         'smtp_port': 465,
         'sender_email': 'itecons.noreply@itecons.uc.pt',
         'sender_password': 'Gkmb3(yehK!mn',
-        'recipient_email': 'diogo.gerardo@itecons.uc.pt'
+        'recipient_email': 'diogo.gerardo@itecons.uc.pt, tiago.jesus@itecons.uc.pt'
     }
     
     thingsboard_config = {
@@ -350,7 +341,7 @@ def main():
         username=username,
         password=password,
         export_dir=export_dir,
-        max_hourly_consumption=100,
+        max_hourly_consumption=500,
         email_config=email_config,
         thingsboard_config=thingsboard_config,
         file_retention_days=7
