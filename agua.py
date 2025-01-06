@@ -1,5 +1,4 @@
 import os
-import json
 import smtplib
 import requests
 from email.message import EmailMessage
@@ -15,11 +14,11 @@ import logging
 from datetime import datetime, timedelta
 from itertools import groupby
 
-logging.basicConfig(
-    level=logging.INFO, 
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    filename='water_log_alerts.log'
-)
+#logging.basicConfig(
+#    level=logging.INFO, 
+#    format='%(asctime)s - %(levelname)s - %(message)s',
+#    filename='water_log_alerts.log'
+#)
 
 class WaterLogAlertSystem:
     def __init__(self, login_url, username, password, export_dir, max_hourly_consumption=500,
@@ -325,7 +324,7 @@ def main():
         'smtp_port': 465,
         'sender_email': 'itecons.noreply@itecons.uc.pt',
         'sender_password': 'Gkmb3(yehK!mn',
-        'recipient_email': 'diogo.gerardo@itecons.uc.pt, tiago.jesus@itecons.uc.pt'
+        'recipient_email': 'diogo.gerardo@itecons.uc.pt'
     }
     
     thingsboard_config = {
