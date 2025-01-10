@@ -1406,7 +1406,7 @@ function stopTermoUpdates() {
         document.getElementById('termo1-content')
     ];
 
-    const durations = [20000, 20000, 20000, 90000, 120000, 90000]; // Tempos em milissegundos para cada seção
+    const durations = [30000, 30000, 30000, 90000, 120000, 90000]; // Tempos em milissegundos para cada seção
 
     let currentVisibleIndex = sections.findIndex(section => section.classList.contains('visible'));
     const nextIndex = (currentVisibleIndex + 1) % sections.length;
@@ -1599,7 +1599,7 @@ function initializeContent() {
     }, 1000);
 
     // Start the toggle cycle
-    toggleContent.timeout = setTimeout(toggleContent, 20000);
+    toggleContent.timeout = setTimeout(toggleContent, 30000);
 }
 
 // Call initialization when the page loads
