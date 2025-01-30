@@ -1004,11 +1004,11 @@
             margin-top: 2vh;
         }
         .mission-text {
-            font-size: 2.2rem;
+            font-size: 2.7rem;
             text-align: center;
             width: 80vw;
             margin: 0 auto;
-            margin-top: 3vh;
+            margin-top: 2vh;
             font-weight: bold;
             line-height: 5vh;
         }
@@ -1120,6 +1120,7 @@
         }
 
         .vision-item {
+            font-size: 2rem;
             margin-bottom: 0px;
             width: 100%;
             text-align: left;
@@ -1175,7 +1176,7 @@
 
         .value-title {
             color: #333;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: bold;
             margin-bottom: 0;
             display: flex;
@@ -1210,7 +1211,7 @@
         .area-item {
             position: absolute;
             align-items: center;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: bold;
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -1476,7 +1477,7 @@
             <iframe id="iframe1" src="http://localhost/Code/termo1.php"></iframe>
             <iframe id="iframe2" src="http://localhost/Code/termo2.php" class="iframe-hidden"></iframe>
             <iframe id="iframe3" src="http://localhost/Code/termo3.php" class="iframe-hidden"></iframe>
-            <iframe id="iframe4" src="http://localhost/Code/termo1.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe4" src="http://localhost/Code/termo4.php" class="iframe-hidden"></iframe>
             <iframe id="iframe5" src="https://thingsboard.itecons.pt/dashboard/872c0570-abee-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
             <iframe id="iframe6" src="https://thingsboard.itecons.pt/dashboard/2485b1f0-ace3-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
             <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon4">
@@ -2216,7 +2217,7 @@ function stopTermoUpdates() {
                     iframe.style.opacity = '0';
                     setTimeout(() => {
                         iframe.style.opacity = '1';
-                    }, 3700);
+                    }, 3900);
                 }
             } else if (nextSection.id === 'meteo-content' || nextSection.id === 'news_RR-content' || nextSection.id === 'termo1-content') {
                 whiteContainer.style.height = '90%';
