@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Arial&display=swap');
         body {
-           /*cursor: none;*/
+           cursor: none;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -36,10 +36,10 @@
         }
         #logo {
             position: absolute;
-            top: 2vh;
+            top: 1vh;
             left: 5vw;
             z-index: 100;
-            width: 150px;
+            width: 220px;
             height: auto;
         }
         #title-overlay {
@@ -55,11 +55,11 @@
             text-shadow: black 2px 2px 20px;
         }
         #main-title {
-            font-size: 5rem;
+            font-size: 8rem;
             margin-bottom: 0.5rem;
         }
         #subtitle {
-            font-size: 2rem;
+            font-size: 2.8rem;
         }
         .content-container {
             position: absolute;
@@ -73,19 +73,49 @@
         }
         /* White containers. Serviços/Próximos eventos/ Notícias*/
         #white-container {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 50%;
-            background-color: white;
-            z-index: 10;
-            padding: 10px;
-            overflow: hidden;
-        }
+    position: absolute;
+    bottom: 0;
+    width: 98.9%;
+    height: 50%;
+    background-color: white;
+    z-index: 10;
+    padding: 10px;
+    overflow: hidden;
+    border-radius: 70px 70px 0px 0px; /* Bordas arredondadas padrão */
+    transition: all 0.5s ease-in-out; /* Transição suave */
+}
+
+#white-container.fullscreen {
+    border-radius: 0; /* Remove bordas arredondadas */
+    height: 100vh; /* Ocupa toda a altura da janela */
+    width: 100vw; /* Ocupa toda a largura da janela */
+    padding: 0; /* Remove o padding */
+    bottom: 0; /* Alinha na parte inferior */
+    left: 0; /* Alinha à esquerda */
+}
+
+#video-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black; /* Fundo preto para evitar bordas brancas */
+    z-index: 1000; /* Garante que o vídeo fique acima de outros elementos */
+    border-radius: 0; /* Remove bordas arredondadas */
+}
+
+#video-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0; /* Inicialmente invisível */
+    transition: opacity 1s ease-in-out; /* Transição suave */
+}
         .qr-code-img {
             position: absolute;
             top: 418px;  /* Distância do topo */
-            right: 32px;  /* Distância da direita */
+            right: 14px;  /* Distância da direita */
             width: 131px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -100,8 +130,8 @@
         }
         .qr-code-img2 {
             position: absolute;
-            top: 87.2%;  /* Distância do topo */
-            right: 12px;  /* Distância da direita */
+            top: 87.3%;  /* Distância do topo */
+            right: -8px;  /* Distância da direita */
             width: 131px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -110,15 +140,11 @@
             opacity: 0;
             transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
         }
-        .qr-code-img2.visible {
-            opacity: 1; /* Torna visível */
-            visibility: visible; /* Permite exibição */
-        }
 
         .qr-code-img3 {
             position: absolute;
             top: 85.5%;  /* Distância do topo */
-            right: 32px;  /* Distância da direita */
+            right: 14px;  /* Distância da direita */
             width: 131px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -126,8 +152,8 @@
         }
         .qr-code-img4 {
             position: absolute;
-            top: 85.5%;  /* Distância do topo */
-            right: 32px;  /* Distância da direita */
+            top: 85.6%;  /* Distância do topo */
+            right: 14px;  /* Distância da direita */
             width: 131px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -136,7 +162,7 @@
         .arrow-icon {
             position: absolute;
             top: 89.5%;  /* Distância do topo */
-            right: 160px;  /* Distância da direita */
+            right: 140px;  /* Distância da direita */
             width: 38px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -152,7 +178,7 @@
         .arrow-icon2 {
             position: absolute;
             top: 95.8%;  /* Distância do topo */
-            right: 140px;  /* Distância da direita */
+            right: 120px;  /* Distância da direita */
             width: 38px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -168,7 +194,7 @@
         .arrow-icon3 {
             position: absolute;
             top: 93.8%;  /* Distância do topo */
-            right: 160px;  /* Distância da direita */
+            right: 140px;  /* Distância da direita */
             width: 38px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -177,7 +203,7 @@
         .arrow-icon4 {
             position: absolute;
             top: 93.8%;  /* Distância do topo */
-            right: 160px;  /* Distância da direita */
+            right: 140px;  /* Distância da direita */
             width: 38px;  /* Tamanho da imagem */
             height: auto;
             z-index: 10;  /* Garante que a imagem fique sobre os outros elementos */
@@ -187,10 +213,10 @@
         /* Services styles */
         .services-title {
             font-family: "Avenir LT Std", sans-serif;
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 0;
-            margin-top: 50px;
-            margin-bottom: 60px;
+            margin-top: 40px;
+            margin-bottom: 30px;
         
             color: #0071a0;
             text-align: center;
@@ -214,43 +240,52 @@
             margin-bottom: 20px;
         }
         .icon-container img {
-            width: 100px;
-            height: 100px;
+            width: 130px;
+            height: 130px;
             object-fit: contain;
             margin-bottom: 8px;
         }
         .icon-container:nth-child(3) img {
             width: 850px;
-            height: 85px;
+            height: 115px;
             object-fit: contain;
             margin-bottom: 16px;
             margin-top: 8px;
-            transform: scale(1);
+            transform: scale(1.3);
         }
         .icon-container:nth-child(4) img {
-            width: 105px;
-            height: 105px;
+            width: 135px;
+            height: 135px;
             object-fit: contain;
             margin-bottom: 12px;
             margin-top: -10px;
-            transform: scale(1);
+            transform: scale(1.08);
+        }
+        .icon-container:nth-child(5) img {
+            width: 135px;
+            height: 135px;
+            object-fit: contain;
+            margin-bottom: px;
+            margin-top: -5px;
+            transform: scale(1.1);
         }
         .icon-container:last-child img {
-            width: 115px;
-            height: 115px;
+            width: 145px;
+            height: 145px;
+            margin-left: -3px;
             object-fit: contain;
-            margin-bottom: 3px;
-            margin-top: -10px;
-            transform: scale(1.2);
+            margin-bottom: 7px;
+            margin-top: -12px;
+            transform: scale(0.95);
         }
         .icon-text {
             text-align: center;
             /* Removed min-height: 0 which was causing the issue */
             font-family: "Avenir LT Std", sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.7rem;
             font-weight: 600;
             color: #646464;
-            max-width: 180px;
+            max-width: 290px;
             margin: 0 auto;
             /* Added to ensure text is visible */
             position: relative;
@@ -311,7 +346,7 @@
         }
         .card-title,
         .card-description {
-            font-size: 14px;
+            font-size: 15px;
             white-space: normal; /* Permite que o texto quebre em várias linhas */
             margin: 0;
             overflow: hidden;
@@ -324,7 +359,7 @@
             color: rgb(234, 234, 234);
         }
         .card-title {
-            font-size: 14px; /* Tamanho maior para o título */
+            font-size: 16px; /* Tamanho maior para o título */
             font-weight: 800;
             white-space: normal;
             overflow: hidden;
@@ -355,7 +390,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             margin-top: 0px
         }
@@ -374,7 +409,7 @@
             width: 100%;
             margin-bottom: 20px;
             margin-top: 20px;
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 0;
         }
         #newsPageTitle {
@@ -384,7 +419,7 @@
             width: 100%;
             margin-bottom: 20px;
             margin-top: 20px;
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: 0;
         }
         .hidden {
@@ -408,6 +443,12 @@
     padding: 5px 10%;
     box-sizing: border-box;
     clip-path: polygon(0% 0, 100% 0, 95% 100%, 0 100%);
+    opacity: 1; /* Inicialmente visível */
+    transition: opacity 0.5s ease-in-out; /* Transição suave */
+}
+
+#blue-bar.hidden {
+    opacity: 0; /* Esconde a blue-bar */
 }
 
 .footer-row {
@@ -434,7 +475,7 @@
 
 .more-info {
     position: absolute;
-    right: 142px;
+    right: 120px;
     bottom: 40px;
     color: #000;
     font-size: 1.2rem;
@@ -478,8 +519,8 @@
         }
 
         .current-weather-left img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin-right: 20px;
             animation: swing 3s ease-in-out infinite;
         }
@@ -516,7 +557,7 @@
 
         .current-temp {
             color: #1a1a1a;
-            font-size: 50px;
+            font-size: 80px;
             font-weight: bold;
         }
         
@@ -527,6 +568,7 @@
         
         .weather-details div {
             margin: 4px 0;
+            font-size: 23px;
         }
         
         .current-weather-right {
@@ -535,19 +577,19 @@
         
         .current-weather-right h1 {
             color: #1a1a1a;
-            font-size: 30px;
+            font-size: 50px;
             font-weight: bold;
             margin: 0;
         }
         
         .current-weather-right h2 {
             color: #333;
-            font-size: 20px;
+            font-size: 25px;
             margin: 0;
         }
         
         .current-weather-right h3 {
-            font-size: 18px;
+            font-size: 32px;
             margin: 0;
             color: #666;
         }
@@ -558,7 +600,7 @@
         
         .forecast-container h3 {
             color: #1a1a1a;
-            font-size: 30px;
+            font-size: 42px;
             font-weight: bold;
             text-align: center;
         }
@@ -567,14 +609,14 @@
             color: #333;
             display: flex;
             justify-content: space-around;
-            margin-top: 5vh;
+            margin-top: 0vh;
         }
         
         .forecast-day {
-            color: #333;
+            color: #494949;
             text-align: center;
             font-weight: 600;
-            font-size: 1.2rem;
+            font-size: 1.8rem;
         }
 
         h3 {
@@ -584,10 +626,10 @@
 /* Estilização geral */
 .custom-chart-container {
     position: relative;
-    height: 29vh;
+    height: 20vh;
     margin-top: 0vh;
     border-radius: 8px;
-    padding: 20px;
+    padding: 0px;
     background-color: rgba(255, 255, 255, 0.9);
     font-size: 30px;
     font-weight: 600;
@@ -596,10 +638,9 @@
 }
 
 /* Configuração para gráficos */
-.custom-chart,
-.wind-container {
+.custom-chart {
     position: absolute;
-    top: 100px;
+    top: 70px;
     left: 0;
     right: 0;
     opacity: 0; /* Começa invisível */
@@ -609,6 +650,17 @@
     
 }
 
+.wind-container {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    opacity: 0; /* Começa invisível */
+    visibility: hidden; /* Fora da exibição */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s; /* Transição suave */
+    font-size: 20px;
+    
+}
 .custom-chart.visible,
 .wind-container.visible {
     opacity: 1; /* Torna visível */
@@ -646,8 +698,8 @@
     border-radius: 15px;
     padding: 2vw;
     margin: 5px;
-    width: 140px;
-    height: 140px;
+    width: 90px;
+    height: 90px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -686,7 +738,7 @@
 /* windy mapa */
 .meteo-split-container {
         display: flex;
-        width: 98%;
+        width: 99.9%;
         height: calc(100% - 12.3vh); /* Ajustado para considerar o footer */
         gap: 20px;
         padding: 20px;
@@ -711,7 +763,7 @@
         flex: 1;
         position: relative;
         height: 100%;
-        border-radius: 8px;
+        border-radius: 8px 30px 8px 8px;
         overflow: hidden;
     }
 
@@ -779,82 +831,80 @@
         }
 
         .container-noticias {
-            max-width: 90%;
-            margin: 0 auto;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    max-width: 90%;
+    max-height: 80%;
+    margin: 0 auto;
+    padding: 10px; /* Reduzir o padding */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas */
+    grid-template-rows: repeat(2, 1fr);    /* 2 linhas */
+    gap: 10px; /* Reduzir o espaçamento entre as notícias */
+    height: 100%; /* Garantir que o contêiner ocupe a altura total */
+}
 
-        .item-noticia {
-            display: none;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            height: 180px;
-            position: relative;
-        }
+.item-noticia {
+    display: none;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    height: 95%; /* Ajustar altura para ocupar o espaço disponível */
+    position: relative;
+    flex-direction: row; /* Imagem à esquerda, texto à direita */
+    align-items: stretch; /* Esticar para ocupar a altura total */
+    margin-bottom: 5px; /* Reduzir a margem inferior */
+}
 
-        .item-noticia.ativo {
-            display: flex;
-        }
+.item-noticia.ativo {
+    display: flex;
+}
 
-        .item-noticia:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
 
         .imagem-noticia-container {
-            width: 300px;
-            height: 180px;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
+    width: 40%; /* Largura da imagem */
+    height: 100%; /* Altura total do contêiner */
+    flex-shrink: 0;
+    overflow: hidden;
+}
 
-        .item-noticia img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .item-noticia:hover img {
-            transform: scale(1.05);
-        }
+.item-noticia img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
 
         .conteudo-noticia {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex-grow: 1;
-        }
+    width: 60%; /* Largura do texto */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center; /* Centralizar o texto verticalmente */
+}
 
-        .item-noticia h3 {
-            font-size: 28px;
-            color: #333;
-            margin: 0;
-            font-weight: bold;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+.item-noticia h3 {
+    font-size: 34px; /* Reduzir o tamanho do título */
+    color: #333;
+    margin: 0 0 5px 0; /* Reduzir a margem inferior */
+    font-weight: bold;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 
-        .item-noticia p {
-            font-size: 20px;
-            color: #666;
-            margin: 0;
-            line-height: 1.6;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+.item-noticia p {
+    font-size: 24px; /* Reduzir o tamanho da descrição */
+    color: #6c6c6c;
+    margin: 0 0 5px 0; /* Reduzir a margem inferior */
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 
         @keyframes fadeIn {
             from {
@@ -888,7 +938,7 @@
 
         /* THingsboard */
         iframe {
-            width: 98%;
+            width: 99%;
             height: 85%;
             border: none;
             position: absolute;
@@ -943,6 +993,315 @@
             70% { opacity: 0.7; }
             100% { opacity: 0; }
         }
+        /* About Us Content */
+        .image-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            width: 100%;
+            margin-top: 2vh;
+        }
+        .mission-text {
+            font-size: 2.7rem;
+            text-align: center;
+            width: 80vw;
+            margin: 0 auto;
+            margin-top: 2vh;
+            font-weight: bold;
+            line-height: 5vh;
+        }
+
+        .mission-item {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            transition: all 1s ease-in-out;
+            opacity: 0;
+            z-index: 1;
+            width: 400px;
+            justify-content: center;
+            top: 0;
+        }
+
+        .mission-item.active {
+            opacity: 1;
+            transform: translateX(0);
+            z-index: 3;
+        }
+
+        .mission-item.left {
+            transform: translateX(-300px);
+            opacity: 0.3;
+            z-index: 2;
+        }
+
+        .mission-item.right {
+            transform: translateX(560px);
+            opacity: 0.3;
+            z-index: 2;
+        }
+
+        .mission-image {
+            width: 130px;
+            height: 130px;
+            flex-shrink: 0;
+        }
+
+        .mvv-title {
+            font-size: 5.5rem;
+            font-weight: 400;
+            margin-left: 20px;
+            margin-top: 18px;
+            color: #0071a0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+            white-space: nowrap;
+        }
+
+        .mission-item.active .mvv-title {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .message-container {
+            position: absolute;
+            top: 16vh;
+            width: 100vw;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            color: #333;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            padding: 0 0px;
+            box-sizing: border-box;
+            line-height: none;
+            font-family: "Avenir LT Std", sans-serif;
+        }
+
+        .message-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .vision-content {
+            width: 100%;
+            max-width: 85%;
+            margin: 0 auto;
+            position: relative;
+            text-align: left;
+        }
+
+        .vision-group {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .vision-group:first-child {
+            grid-template-columns: 1fr 1fr;
+            margin-left: 0px;
+            width: 100%;
+        }
+
+        .vision-group.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .vision-item {
+            font-size: 2rem;
+            margin-bottom: 0px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .vision-group > div:nth-child(2) {
+            margin-left: 100px;
+            padding-right: 20px;
+        }
+
+        .vision-title {
+            color: #0071a0;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 0px;
+            display: flex;
+            align-items: center;
+        }
+
+        .vision-title::before {
+            content: "•";
+            color: #0071a0;
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            justify-content: start;
+            align-items: start;
+        }
+
+        .values-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .value-item {
+            margin-bottom: 0px;
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .value-title {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 0;
+            display: flex;
+            align-items: flex-start;
+            line-height: 1.2;
+            text-align: left;
+        }
+
+        .value-title::before {
+            content: "•";
+            color: #0071a0;
+            font-size: 1.5em;
+            margin-right: 10px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .value-title[data-content="Competência Técnica e Científica"] {
+            max-width: 150px;
+        }
+
+        .areas-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            max-width: 100%;
+            position: relative;
+            min-height: 30px;
+        }
+
+        .area-item {
+            position: absolute;
+            align-items: center;
+            font-size: 0.9em;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            width: calc(30% - 0px);
+            box-sizing: border-box;
+            display: inline-block;
+            transform: translateX(-9999px);
+            pointer-events: none;
+        }
+
+        .area-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .areas-grid:not(:hover) .area-item:not(.visible) {
+            transform: translateX(-9999px);
+        }
+
+        .area-item:nth-child(4n+1) { left: 0; }
+        .area-item:nth-child(4n+2) { left: 25%; }
+        .area-item:nth-child(4n+3) { left: 50%; }
+        .area-item:nth-child(4n+4) { left: 75%; }
+
+        .area-item.visible {
+            opacity: 1;
+        }
+
+        .area-item::before {
+            content: "•";
+            color: #0071a0;
+            font-size: 1.2em;
+            margin-right: 5px;
+            display: inline-block;
+            gap: 20px;
+        }
+
+        /* Estilo para o QR code na seção About Us */
+.qr-code-about-us {
+    position: absolute;
+    bottom: 10px; /* Distância do fundo */
+    right: 10px;  /* Distância da direita */
+    width: 135px; /* Tamanho do QR code */
+    height: auto; /* Mantém a proporção */
+    z-index: 100; /* Garante que fique acima de outros elementos */
+    opacity: 0;   /* Inicialmente invisível */
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+}
+
+/* Estilo para a seta na seção About Us */
+.arrow-about-us {
+    position: absolute;
+    bottom: 22px; /* Posiciona acima do QR code */
+    right: 140px; /* Distância da direita, ao lado do QR code */
+    width: 38px;  /* Tamanho da seta */
+    height: auto; /* Mantém a proporção */
+    z-index: 100; /* Garante que fique acima de outros elementos */
+    opacity: 0;   /* Inicialmente invisível */
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, visibility 1s; /* Transição suave */
+    transform: rotate(90deg); /* Rotaciona a seta para a direita */
+}
+
+/* Torna o QR code e a seta visíveis quando a seção About Us estiver ativa */
+#about-content.visible .qr-code-about-us,
+#about-content.visible .arrow-about-us {
+    opacity: 1;
+    visibility: visible;
+}
+/* Estilo base para about-content */
+#about-content {
+    opacity: 0; /* Inicialmente invisível */
+    visibility: hidden; /* Esconde o elemento */
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out; /* Transição suave */
+}
+
+/* Classe para exibir about-content com fade-in */
+#about-content.visible {
+    opacity: 1; /* Torna o elemento visível */
+    visibility: visible; /* Mostra o elemento */
+}
+/* Estilos para o QR code e a seta em services-content */
+#services-content .qr-code-img,
+#services-content .arrow-icon {
+    opacity: 1; /* Sempre visível */
+    visibility: visible; /* Sempre visível */
+    transition: none; /* Remove qualquer transição */
+}
 
     </style>
 </head>
@@ -957,32 +1316,56 @@
         </div>
     </section>
     <section id="white-container">
+        <!-- About Us Content -->
+        <div class="content-container visible" id="about-content">
+            <div class="image-container">
+                <div class="mission-item">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/mission.png?raw=true" alt="Missão" class="mission-image">
+                    <span class="mvv-title">Missão</span>
+                </div>
+                <div class="mission-item">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/vision.png?raw=true" alt="Visão" class="mission-image">
+                    <span class="mvv-title">Visão</span>
+                </div>
+                <div class="mission-item">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/values.png?raw=true" alt="Valores" class="mission-image">
+                    <span class="mvv-title">Valores</span>
+                </div>
+            </div>
+            <div class="message-container" id="message-container"></div>
+            <img src="https://raw.githubusercontent.com/DGitecons/public/refs/heads/main/QR%20Code/1.%20About-Us-Content.png" 
+            alt="QR Code About Us" 
+            class="qr-code-about-us">
+            <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" 
+            alt="Seta" 
+            class="arrow-about-us">
+        </div>       
         <!-- Services Content -->
-        <div class="content-container visible" id="services-content">
+        <div class="content-container hidden" id="services-content">
             <div class="services-title">Serviços</div>
             <div class="icons-wrapper">
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/1.%20Ensaios%20Laboratoriais%20%20e%20IN-SITU.png?raw=true" alt="Ensaios Laboratoriais e IN-SITU">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/refs/heads/main/%C3%ADcones/1_Ensaios%20Laboratoriais%20e%20IN-SITU.png" alt="Ensaios Laboratoriais e IN-SITU">
                     <div class="icon-text">Ensaios Laboratoriais e <i>IN-SITU</i></div>
                 </div>
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/2.%20Consultoria.png?raw=true" alt="Consultoria">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/2_Consultoria.png?raw=true" alt="Consultoria">
                     <div class="icon-text">Consultoria</div>
                 </div>
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/3.%20Marca%C3%A7%C3%A3o%20CE%20e%20Avalia%C3%A7%C3%A3o%20T%C3%A9cnica.png?raw=true" alt="Marcação CE e Avaliação Técnica">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/refs/heads/main/%C3%ADcones/3_Marca%C3%A7%C3%A3o%20CE%20e%20Avalia%C3%A7%C3%A3o%20T%C3%A9cnica.png" alt="Marcação CE e Avaliação Técnica">
                     <div class="icon-text">Marcação CE e Avaliação Técnica</div>
                 </div>
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/4.%20Investiga%C3%A7%C3%A3o%20e%20Desenvolvimento.png?raw=true" alt="Investigação e Desenvolvimento">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/4_Investiga%C3%A7%C3%A3o%20e%20Desenvolvimento.png?raw=true" alt="Investigação e Desenvolvimento">
                     <div class="icon-text">Investigação e Desenvolvimento</div>
                 </div>
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/5.%20Forma%C3%A7%C3%A3o.png?raw=true" alt="Formação">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/5_Forma%C3%A7%C3%A3o.png?raw=true" alt="Formação">
                     <div class="icon-text">Formação</div>
                 </div>
                 <div class="icon-container">
-                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/6.%20Eventos.png?raw=true" alt="Eventos">
+                    <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/6_Eventos.png?raw=true" alt="Eventos">
                     <div class="icon-text">Eventos</div>
                 </div>
             </div>
@@ -1011,6 +1394,17 @@
             <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon">
             <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/3.%20News.png?raw=true" alt="QR Code" class="qr-code-img">
         </div>
+        <!-- Adicione esta seção antes de meteo-content -->
+        <div class="content-container hidden" id="video-content">
+            <iframe 
+                id="youtube-video"
+                src="https://www.youtube.com/embed/uxM0S7X3P9s?autoplay=1&mute=1&controls=0&loop=1&playlist=uxM0S7X3P9s&vq=hd720" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                style="width: 100%; height: 100%;">
+            </iframe>
+        </div>
         <!-- Meteo content will go here -->
         <div class="content-container hidden" id="meteo-content">
             <div class="meteo-split-container">
@@ -1031,7 +1425,7 @@
                         </div>
                         <div class="current-weather-right">
                             <h1>Meteorologia</h1>
-                            <h2>Coimbra - <span id="currentDate"></span></h2>
+                            <h2><span id="currentDate"></span></h2>
                             <h3 id="condition"></h3>
                         </div>
                     </div>
@@ -1075,16 +1469,17 @@
             <!-- Notícias serão carregadas aqui -->
         </div>
         <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon3">
-        <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/5.%20RR.png?raw=true" alt="QR Code" class="qr-code-img3">
+        <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/5.%20RR_.png?raw=true" alt="QR Code" class="qr-code-img3">
        
     </div>
         <!-- News Public Content -->
         <div class="content-container hidden" id="termo1-content">
-            <iframe id="iframe1" src="http://localhost/NEWS/termoServer/termo1.php"></iframe>
-            <iframe id="iframe2" src="http://localhost/NEWS/termoServer/termo2.php" class="iframe-hidden"></iframe>
-            <iframe id="iframe3" src="http://localhost/NEWS/termoServer/termo3.php" class="iframe-hidden"></iframe>
-            <iframe id="iframe4" src="https://thingsboard.itecons.pt/dashboard/872c0570-abee-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
-            <iframe id="iframe5" src="https://thingsboard.itecons.pt/dashboard/2485b1f0-ace3-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
+            <iframe id="iframe1" src="http://localhost/Code/termo1.php"></iframe>
+            <iframe id="iframe2" src="http://localhost/Code/termo2.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe3" src="http://localhost/Code/termo3.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe4" src="http://localhost/Code/termo4.php" class="iframe-hidden"></iframe>
+            <iframe id="iframe5" src="https://thingsboard.itecons.pt/dashboard/872c0570-abee-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
+            <iframe id="iframe6" src="https://thingsboard.itecons.pt/dashboard/2485b1f0-ace3-11ef-a0ee-df46eee9b5b2?publicId=1eebd130-213f-11ec-9eee-c9c8a19bf12b" class="iframe-hidden"></iframe>
             <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" alt="Seta" class="arrow-icon4">
             <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/6.%20TB.png?raw=true" alt="QR Code" class="qr-code-img4">
         </div>
@@ -1123,6 +1518,317 @@
     
     
     <script>
+        // JavaScript do Código 2 (integrados)
+        const items = document.querySelectorAll('.mission-item');
+        const messageContainer = document.getElementById('message-container');
+        let currentIndex = 0;
+        let currentAreaIndex = 0;
+        let visionInterval;
+        let visionGroupIndex = 0;
+
+        const messages = [
+            `<div class="mission-text">Estabelecer uma colaboração estreita e ágil entre a Universidade de Coimbra e a Sociedade, as Empresas e outros organismos dos sectores da Construção, da Energia, do Ambiente e da Sustentabilidade.</div>`,
+            `<div class="vision-content">
+                <div class="vision-group active">
+                    <div class="vision-item">
+                        <div class="vision-title">Laboratório de Referência</div>
+                        <div>
+                            <strong>Áreas</strong>:
+                            <div class="areas-grid">
+                                <div class="area-item">Acústica</div>
+                                <div class="area-item">Adesivos</div>
+                                <div class="area-item">Agregados</div>
+                                <div class="area-item">Águas</div>
+                                <div class="area-item">Alvenaria</div>
+                                <div class="area-item">Asfalto</div>
+                                <div class="area-item">Betões</div>
+                                <div class="area-item">Combustíveis</div>
+                                <div class="area-item">Ensaios Elétricos</div>                           
+                                <div class="area-item">Construção</div>
+                                <div class="area-item">Efluentes</div>
+                                <div class="area-item">Fertilizantes</div>
+                                <div class="area-item">Metais</div>
+                                <div class="area-item">Plásticos</div>
+                                <div class="area-item">Rochas</div>
+                                <div class="area-item">Materiais de Engenharia</div>                                
+                                <div class="area-item">Solos</div>
+                                <div class="area-item">Tintas</div>
+                                <div class="area-item">Vidros</div>
+                                <div class="area-item">Resistência ao Fogo</div>                                
+                                <div class="area-item">Cerâmica</div>
+                                <div class="area-item">Revestimentos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vision-item">
+                        <div class="vision-title">Apoio à Inovação Empresarial</div>
+                        <div>Promover competências alinhadas com<strong> Construção Sustentável</strong>, <strong>Eficiência Produtiva</strong>, <strong>Prevenção de Riscos</strong> e <strong>Digitalização da Economia</strong>.</div>
+                    </div>
+                </div>
+                <div class="vision-group">
+                    <div class="vision-item">
+                        <div class="vision-title">Instituição I&DT</div>
+                        <div>Reforçar a sua posição como <strong>instituição de I&DT</strong> de referência <strong>internacional</strong> em Ciências da <strong>Construção</strong>, <strong>Energia</strong>, <strong>Ambiente</strong> e <strong>Sustentabilidade</strong>.</div>
+                    </div>
+                    <div class="vision-item">
+                        <div class="vision-title">Formação Profissional</div>
+                        <div>Ser referência na formação e atualização de técnicos dos setores da <strong>Construção</strong>, <strong>Energia</strong>, <strong>Ambiente</strong> e <strong>Sustentabilidade</strong>.</div>
+                    </div>
+                </div>
+                <div class="vision-group">
+                    <div class="vision-item">
+                        <div class="vision-title">Eventos Técnicos e Científicos</div>
+                        <div>Organizar eventos <strong>técnicos</strong> e <strong>científicos</strong> de referência a nível <strong>internacional</strong>.</div>
+                    </div>
+                    <div class="vision-item">
+                        <div class="vision-title">Avaliação Técnica de Produtos</div>
+                        <div>Ser referência na avaliação técnica de produtos de construção, contribuindo para a <strong>marcação CE</strong> conforme a legislação europeia.</div>
+                    </div>
+                </div>
+            </div>`,
+            `<div class="values-grid">
+                <div class="values-column">
+                    <div class="value-item">
+                        <div class="value-title">Integridade</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Independência</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Trabalho em Equipa</div>
+                    </div>
+                </div>
+                <div class="values-column">
+                    <div class="value-item">
+                        <div class="value-title">Responsabilidade Social</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Apoio à Comunidade</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Preservação do Planeta</div>
+                    </div>
+                </div>
+                <div class="values-column">
+                    <div class="value-item">
+                        <div class="value-title">Ética</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Idoneidade</div>
+                    </div>
+                    <div class="value-item">
+                        <div class="value-title">Competência Técnica e Científica</div>
+                    </div>
+                </div>
+            </div>`
+        ];
+
+// Global variables to track all intervals and timeouts
+let state = {
+    areaInterval: null,
+    visionInterval: null,
+    areaTimeouts: [],
+    currentAreaIndex: 0,
+    visionGroupIndex: 0,
+    currentIndex: 0
+};
+
+// Clear all running timers
+function clearAllTimers() {
+    if (state.areaInterval) {
+        clearInterval(state.areaInterval);
+        state.areaInterval = null;
+    }
+    if (state.visionInterval) {
+        clearTimeout(state.visionInterval);
+        state.visionInterval = null;
+    }
+    state.areaTimeouts.forEach(timeout => clearTimeout(timeout));
+    state.areaTimeouts = [];
+}
+
+function showNextAreas() {
+    const areaItems = Array.from(messageContainer.querySelectorAll('.area-item'));
+    
+    // Reset visibility
+    areaItems.forEach(item => {
+        item.classList.remove('visible');
+        void item.offsetWidth; // Force reflow
+    });
+    
+    // Clear existing timeouts
+    state.areaTimeouts.forEach(timeout => clearTimeout(timeout));
+    state.areaTimeouts = [];
+    
+    // Reset index if needed
+    if (state.currentAreaIndex >= areaItems.length || state.currentAreaIndex === 0) {
+        state.currentAreaIndex = 0; // Reinicia o índice para 0
+    }
+    
+    // Show next batch of items
+    for (let i = 0; i < 4; i++) {
+        if (state.currentAreaIndex + i < areaItems.length) {
+            const item = areaItems[state.currentAreaIndex + i];
+            const timeout = setTimeout(() => {
+                item.classList.add('visible');
+            }, i * 150);
+            state.areaTimeouts.push(timeout);
+        }
+    }
+    
+    state.currentAreaIndex += 4;
+    
+    // Schedule next batch if needed
+    if (state.currentAreaIndex >= areaItems.length) {
+        const timeout = setTimeout(() => {
+            state.currentAreaIndex = 0;
+            showNextAreas();
+        }, 5000);
+        state.areaTimeouts.push(timeout);
+    }
+}
+
+function showNextVisionGroup() {
+    const visionGroups = messageContainer.querySelectorAll('.vision-group');
+    
+    // Reset all groups
+    visionGroups.forEach(group => {
+        group.classList.remove('active');
+        void group.offsetWidth; // Force reflow
+    });
+    
+    const delays = [30000, 15000, 15000];
+    const nextDelay = delays[state.visionGroupIndex];
+    
+    // Activate current group
+    visionGroups[state.visionGroupIndex].classList.add('active');
+    
+    // Update index
+    state.visionGroupIndex = (state.visionGroupIndex + 1) % visionGroups.length;
+    
+    // Schedule next rotation
+    if (state.visionInterval) {
+        clearTimeout(state.visionInterval);
+    }
+    state.visionInterval = setTimeout(showNextVisionGroup, nextDelay);
+}
+
+
+let rotationInterval = null;
+let isVisible = true; // Começamos com true para garantir que o conteúdo apareça inicialmente
+
+function rotateItems() {
+    const items = document.querySelectorAll('.mission-item');
+    const messageContainer = document.getElementById('message-container');
+    
+    // Limpa todos os timers antes de iniciar uma nova rotação
+    clearAllTimers();
+    
+    // Reset classes e garante visibilidade
+    items.forEach(item => {
+        item.classList.remove('active', 'left', 'right');
+        item.style.display = ''; // Remove qualquer display: none
+    });
+    
+    // Set new positions
+    items[currentIndex].classList.add('active');
+    items[(currentIndex - 1 + items.length) % items.length].classList.add('left');
+    items[(currentIndex + 1) % items.length].classList.add('right');
+    
+    // Update message content
+    messageContainer.classList.remove('active');
+    messageContainer.style.display = ''; // Garante que o container está visível
+    
+    setTimeout(() => {
+        messageContainer.innerHTML = messages[currentIndex];
+        messageContainer.classList.add('active');
+        
+        if (currentIndex === 1) { // Visão
+            state.currentAreaIndex = 0;
+            showNextAreas();
+            state.areaInterval = setInterval(showNextAreas, 5000);
+            state.visionGroupIndex = 0;
+            showNextVisionGroup();
+            
+            rotationInterval = setTimeout(() => {
+                if (isVisible) {
+                    currentIndex = (currentIndex + 1) % items.length;
+                    rotateItems();
+                }
+            }, 60000);
+        } else {
+            rotationInterval = setTimeout(() => {
+                if (isVisible) {
+                    currentIndex = (currentIndex + 1) % items.length;
+                    rotateItems();
+                }
+            }, 15000);
+        }
+    }, 500);
+}
+
+function pauseRotation() {
+    isVisible = false;
+    if (rotationInterval) {
+        clearTimeout(rotationInterval);
+        rotationInterval = null;
+    }
+    if (state.areaInterval) {
+        clearInterval(state.areaInterval);
+        state.areaInterval = null;
+    }
+    if (state.visionInterval) {
+        clearTimeout(state.visionInterval);
+        state.visionInterval = null;
+    }
+}
+
+function resumeRotation() {
+    isVisible = true;
+    currentIndex = 0; // Sempre começa do índice 0 (missão)
+    state.currentAreaIndex = 0;
+    rotateItems();
+}
+
+// Função para verificar se o elemento está visível na viewport
+function isElementVisible(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+// Event listener para scroll
+function setupScrollListener() {
+    const aboutContent = document.querySelector('.about-content');
+    let wasVisible = false;
+
+    window.addEventListener('scroll', () => {
+        if (!aboutContent) return;
+
+        const isNowVisible = isElementVisible(aboutContent);
+        
+        if (isNowVisible && !wasVisible) {
+            resumeRotation();
+        } else if (!isNowVisible && wasVisible) {
+            pauseRotation();
+        }
+        
+        wasVisible = isNowVisible;
+    }, { passive: true });
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    state.currentIndex = 0;
+    setupScrollListener();
+    rotateItems(); // Inicia a rotação imediatamente
+});
+
+
   const snowContainer = document.getElementById('snow-container');
 
 function createSnowflake() {
@@ -1180,7 +1886,7 @@ function startSnowfall() {
 startSnowfall();
 
         /* Iframes */
-const termoIframes = ["iframe1", "iframe2", "iframe3", "iframe4", "iframe5"];
+const termoIframes = ["iframe1", "iframe2", "iframe3", "iframe4", "iframe5", "iframe6"];
 let termoCurrentIndex = 0;
 let termoInterval = null;
 
@@ -1261,7 +1967,7 @@ function stopTermoUpdates() {
 
                     for (let i = 0; i < items.length; i++) {
                         const titulo = items[i].getElementsByTagName("title")[0]?.textContent || "Título não disponível";
-                        const descricao = items[i].getElementsByTagName("description")[0]?.textContent || "Descrição não disponível";
+                        const descricao = items[i].getElementsByTagName("description")[0]?.textContent || "";
                         const urlImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("url");
                         const tipoImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("type");
                         
@@ -1387,170 +2093,207 @@ function stopTermoUpdates() {
 
         function toggleContent() {
     const sections = [
+        document.getElementById('about-content'),
         document.getElementById('services-content'),
         document.getElementById('events-content'),
         document.getElementById('news-content'),
+        document.getElementById('video-content'),
         document.getElementById('meteo-content'),
         document.getElementById('news_RR-content'),
         document.getElementById('termo1-content')
     ];
 
-    const durations = [2000, 2000, 2000, 9000, 12000, 75000]; // Tempos em milissegundos para cada seção
+    const durations = [90000, 30000, 30000, 30000, 165000, 90000, 120000, 90000];
 
     let currentVisibleIndex = sections.findIndex(section => section.classList.contains('visible'));
     const nextIndex = (currentVisibleIndex + 1) % sections.length;
 
     const whiteContainer = document.getElementById('white-container');
     const titleOverlay = document.getElementById('title-overlay');
-    const qrcode2 = document.getElementById('qrcode2');
-    const arrow2 = document.getElementById('arrow2');
+    const blueBar = document.getElementById('blue-bar');
+
+    // Add transition property to blue bar
+    blueBar.style.transition = 'opacity 0.5s ease-in-out';
+
+    if (sections[currentVisibleIndex].id === 'about-content') {
+        pauseRotation();
+    }
+
     const qrcode = document.getElementById('qrcode');
     const arrow = document.getElementById('arrow');
+    const qrcode2 = document.getElementById('qrcode2');
+    const arrow2 = document.getElementById('arrow2');
 
-    // Reset all QR codes and arrows to hidden initially
-    qrcode.style.opacity = '0';
-    qrcode.style.visibility = 'hidden';
-    arrow.style.opacity = '0';
-    arrow.style.visibility = 'hidden';
+    if (sections[currentVisibleIndex].id !== 'services-content') {
+        qrcode.style.opacity = '0';
+        qrcode.style.visibility = 'hidden';
+        arrow.style.opacity = '0';
+        arrow.style.visibility = 'hidden';
+    }
+
     qrcode2.style.opacity = '0';
     qrcode2.style.visibility = 'hidden';
     arrow2.style.opacity = '0';
     arrow2.style.visibility = 'hidden';
 
-    whiteContainer.style.transition = 'height 0.5s ease-in-out';
+    whiteContainer.style.transition = 'all 0.5s ease-in-out';
     titleOverlay.style.transition = 'opacity 0.5s ease-in-out';
 
-    sections.forEach((section, index) => {
-        if (index === nextIndex) {
-            section.classList.toggle('hidden', false);
-            section.classList.toggle('visible', true);
+    const applyFadeOutAndSwitch = () => {
+        const currentSection = sections[currentVisibleIndex];
 
-            if(section.id === 'services-content') {
-                // Reset white container height and QR code/arrow for services
+        if (currentSection.id === 'termo1-content') {
+            currentSection.classList.add('fade-out');
+        }
+
+        setTimeout(() => {
+            currentSection.classList.remove('visible');
+            currentSection.classList.add('hidden');
+
+            if (currentSection.id === 'termo1-content') {
+                currentSection.classList.remove('fade-out');
+            }
+
+            const nextSection = sections[nextIndex];
+            nextSection.classList.remove('hidden');
+            nextSection.classList.add('visible');
+
+            if (nextSection.id === 'about-content') {
+                resumeRotation();
+            }
+
+            if (nextSection.id === 'services-content') {
                 whiteContainer.style.height = '50%';
+                whiteContainer.classList.remove('fullscreen');
 
-                // Immediately hide QR code and arrow
-                qrcode.style.opacity = '0';
-                qrcode.style.visibility = 'hidden';
-                arrow.style.opacity = '0';
-                arrow.style.visibility = 'hidden';
+                qrcode.style.opacity = '1';
+                qrcode.style.visibility = 'visible';
+                qrcode.style.transition = 'none';
+                arrow.style.opacity = '1';
+                arrow.style.visibility = 'visible';
+                arrow.style.transition = 'none';
 
-                // Show arrow after a short delay
-                setTimeout(function() {
-                    arrow.style.opacity = '1';
-                    arrow.style.visibility = 'visible';
-                }, 300);
-
-                // Show QR code after the arrow
-                setTimeout(function() {
-                    qrcode.style.opacity = '1';
-                    qrcode.style.visibility = 'visible';
-                }, 500);
-
-                // Ensure title overlay is visible
                 setTimeout(() => {
                     titleOverlay.style.opacity = '1';
                     titleOverlay.style.visibility = 'visible';
                 }, 1000);
-            } 
-            else if (section.id === 'events-content' || section.id === 'news-content') {
-                // Reset white container height and show QR code/arrow for events and news
+
+                blueBar.classList.remove('hidden');
+                blueBar.style.opacity = '1';
+            } else if (nextSection.id === 'events-content' || nextSection.id === 'news-content') {
                 whiteContainer.style.height = '50%';
+                whiteContainer.classList.remove('fullscreen');
 
-                // Find the specific QR code and arrow for the current section
-                const currentQRCode = document.querySelector(`#${section.id} .qr-code-img`);
-                const currentArrow = document.querySelector(`#${section.id} .arrow-icon`);
+                const currentQRCode = document.querySelector(`#${nextSection.id} .qr-code-img`);
+                const currentArrow = document.querySelector(`#${nextSection.id} .arrow-icon`);
 
-                // Directly show QR code and arrow
                 currentQRCode.style.opacity = '1';
                 currentQRCode.style.visibility = 'visible';
                 currentArrow.style.opacity = '1';
                 currentArrow.style.visibility = 'visible';
 
-                // Ensure title overlay is visible
                 setTimeout(() => {
                     titleOverlay.style.opacity = '1';
                     titleOverlay.style.visibility = 'visible';
                 }, 1000);
-            }
-            else if (section.id === 'meteo-content' || section.id === 'news_RR-content' || section.id === 'termo1-content') {
-                // For these sections, adjust white container height to 90%
-                whiteContainer.style.height = '90%';
 
-                // Reset and show QR code 2 and arrow 2
+                blueBar.classList.remove('hidden');
+                blueBar.style.opacity = '1';
+            } else if (nextSection.id === 'video-content') {
+                whiteContainer.style.height = '100vh';
+                whiteContainer.classList.add('fullscreen');
+                titleOverlay.style.opacity = '0';
+                titleOverlay.style.visibility = 'hidden';
+
+                // Fade out blue bar before hiding it
+                blueBar.style.opacity = '0';
+                setTimeout(() => {
+                    blueBar.classList.add('hidden');
+                }, 500);
+
+                const iframe = document.querySelector('#video-content iframe');
+                if (iframe) {
+                    iframe.src = iframe.src;
+                    iframe.style.opacity = '0';
+                    setTimeout(() => {
+                        iframe.style.opacity = '1';
+                    }, 4000);
+                }
+            } else if (nextSection.id === 'meteo-content' || nextSection.id === 'news_RR-content' || nextSection.id === 'termo1-content') {
+                whiteContainer.style.height = '90%';
+                whiteContainer.classList.remove('fullscreen');
+
                 qrcode2.style.opacity = '0';
                 qrcode2.style.visibility = 'hidden';
                 arrow2.style.opacity = '0';
                 arrow2.style.visibility = 'hidden';
 
-                // Show arrow 2 after a short delay
-                setTimeout(function() {
+                setTimeout(function () {
                     arrow2.style.opacity = '1';
                     arrow2.style.visibility = 'visible';
                 }, 300);
 
-                // Show QR code 2 after the arrow
-                setTimeout(function() {
+                setTimeout(function () {
                     qrcode2.style.opacity = '1';
                     qrcode2.style.visibility = 'visible';
                 }, 500);
 
-                // Hide title overlay immediately
                 titleOverlay.style.opacity = '0';
                 titleOverlay.style.visibility = 'hidden';
-            } 
-            else {
-                // For other sections, set white container height to 50%
-                whiteContainer.style.height = '50%';
 
-                // Show title overlay after a delay
+                blueBar.classList.remove('hidden');
+                blueBar.style.opacity = '1';
+            } else {
+                whiteContainer.style.height = '50%';
+                whiteContainer.classList.remove('fullscreen');
+
                 setTimeout(() => {
                     titleOverlay.style.opacity = '1';
                     titleOverlay.style.visibility = 'visible';
                 }, 1000);
+
+                blueBar.classList.remove('hidden');
+                blueBar.style.opacity = '1';
             }
 
-            // Content-specific updates
-            if (section.id === 'meteo-content') {
+            if (nextSection.id === 'meteo-content') {
                 startMeteoUpdates();
             } else {
                 stopMeteoUpdates();
             }
 
-            if (section.id === 'termo1-content') {
+            if (nextSection.id === 'termo1-content') {
                 startTermoUpdates();
             } else {
                 stopTermoUpdates();
             }
 
-            if (section.id === 'news_RR-content') {
-                indiceAtual = 0; // Reset index
-                paginaAtual = 1; // Reset page
-                exibirNoticias(); // Show first batch
+            if (nextSection.id === 'news_RR-content') {
+                indiceAtual = 0;
+                paginaAtual = 1;
+                exibirNoticias();
             }
-        } else {
-            section.classList.toggle('visible', false);
-            section.classList.toggle('hidden', true);
-        }
-    });
+        }, 500);
+    };
 
-    // Clear and set next toggle timeout
+    applyFadeOutAndSwitch();
+
     clearTimeout(toggleContent.timeout);
     toggleContent.timeout = setTimeout(toggleContent, durations[nextIndex]);
 }
 
 // Immediately set the initial visible section to services-content
 function initializeContent() {
-    const servicesContent = document.getElementById('services-content');
+    const aboutContent = document.getElementById('about-content'); // Corrigido para 'about-content'
     const whiteContainer = document.getElementById('white-container');
     const titleOverlay = document.getElementById('title-overlay');
-    const qrcode = document.getElementById('qrcode');
-    const arrow = document.getElementById('arrow');
 
-    // Ensure all other sections are hidden
+    // Esconder todas as outras seções
     const sections = [
+        'services-content',
         'events-content',
         'news-content',
+        'video-content', // Novo conteúdo
         'meteo-content', 
         'news_RR-content', 
         'termo1-content'
@@ -1563,38 +2306,32 @@ function initializeContent() {
         }
     });
 
-    // Show services content
-    servicesContent.classList.remove('hidden');
-    servicesContent.classList.add('visible');
+    // Mostrar a seção "About Us"
+    aboutContent.classList.remove('hidden');
+    aboutContent.classList.add('visible');
 
-    // Set white container height
+    // Ajustar a altura do container branco
     whiteContainer.style.height = '50%';
 
-    // Show arrow and QR code with delays
-    setTimeout(function() {
-        arrow.style.opacity = '1';
-        arrow.style.visibility = 'visible';
-    }, 300);
-
-    setTimeout(function() {
-        qrcode.style.opacity = '1';
-        qrcode.style.visibility = 'visible';
-    }, 500);
-
-    // Show title overlay
+    // Mostrar o título overlay
     setTimeout(() => {
         titleOverlay.style.opacity = '1';
         titleOverlay.style.visibility = 'visible';
     }, 1000);
 
-    // Start the toggle cycle
-    toggleContent.timeout = setTimeout(toggleContent, 2000);
+    // Iniciar o ciclo de alternância
+    toggleContent.timeout = setTimeout(toggleContent, 9000); // 30 segundos para "About Us"
 }
 
 // Call initialization when the page loads
 document.addEventListener('DOMContentLoaded', initializeContent);
 
-
+setTimeout(() => {
+        const iframe = document.querySelector('#video-content iframe');
+        if (iframe) {
+            iframe.style.opacity = '1'; // Torna o iframe visível
+        }
+    }, 5000); // 5000 milissegundos = 5 segundos
 // Controle de atualização do meteo
 let meteoInterval;
 
@@ -1621,14 +2358,15 @@ function changeLayer() {
     currentLayerIndex = (currentLayerIndex + 1) % layers.length;
     const layer = layers[currentLayerIndex];
     iframe.style.transform = 'translateY(100%)'; // Move para fora da tela antes de trocar o conteúdo
-    iframe.src = `https://embed.windy.com/embed2.html?lat=39.3999&lon=-8.2245&zoom=6&level=surface&overlay=${layer}&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=&detailLon=&metricWind=default&metricTemp=default&radarRange=-1&play=true`;
+
+    // Troca a camada e recarrega o iframe
+    iframe.src = `https://embed.windy.com/embed2.html?lat=39.3999&lon=-8.2245&zoom=6&level=surface&overlay=${layer}&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=&detailLon=&metricRain=mm&metricWind=km/h&metricTemp=°C&radarRange=-1&message=true&play=true`;
+
+    // Aplica o efeito de transição somente após o iframe ser recarregado
+    iframe.onload = () => {
+        iframe.style.transform = 'translateY(0)'; // Move o iframe de volta para sua posição original
+    };
 }
-
-// Evento para aplicar o efeito "desvendar" quando o iframe termina de carregar
-iframe.addEventListener('load', () => {
-    iframe.style.transform = 'translateY(0)'; // Move o iframe de volta para sua posição original
-});
-
 
 
 //video    
@@ -1713,7 +2451,8 @@ iframe.addEventListener('load', () => {
 // Função para carregar e atualizar eventos
 async function loadEvents() {
     try {
-        const response = await fetch('itecons_next.json');
+        // URL do arquivo JSON
+        const response = await fetch('https://raw.githubusercontent.com/DGitecons/next-itecons-rss/refs/heads/main/data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1726,19 +2465,19 @@ async function loadEvents() {
         container.innerHTML = '';
 
         // Atualiza o título da página com o título do JSON
-        pageTitle.textContent = data.title;
+        pageTitle.textContent = "Próximas Formações e Eventos";
 
-                // Itera pelos eventos
-        data.events.slice(0, 5).forEach(event => {
+        // Itera pelos eventos
+        data.forEach(event => {
             const eventCard = document.createElement('div');
             eventCard.className = 'event-card';
             eventCard.innerHTML = `
                 <div class="card">
                     <div class="event-date">${event.date}</div>
-                    <img src="${event.img}" class="card-img-top" alt="Event Image">
+                    <img src="${event.image_url}" class="card-img-top" alt="Event Image">
                     <div class="card-body">
                         <div class="card-text-container">
-                            <h5 class="card-title">${event.subtitle}</h5>
+                            <h5 class="card-title">${event.title}</h5>
                             <p class="card-description">${event.description}</p>
                         </div>
                     </div>
@@ -1753,10 +2492,17 @@ async function loadEvents() {
     }
 }
 
+// Carregar eventos ao abrir a página
+document.addEventListener('DOMContentLoaded', loadEvents);
+
+// Atualizar eventos a cada 5 minutos (300000 milissegundos)
+setInterval(loadEvents, 300000);
+
 // Função para carregar e atualizar notícias
 async function loadNews() {
     try {
-        const response = await fetch('itecons_news.json');
+        // URL do arquivo JSON
+        const response = await fetch('https://raw.githubusercontent.com/DGitecons/news-itecons-rss/refs/heads/main/data.json');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1768,8 +2514,10 @@ async function loadNews() {
         // Limpa o contêiner antes de adicionar novas notícias
         container.innerHTML = '';
 
+        // Atualiza o título da página
         pageTitle.textContent = 'Notícias';
 
+        // Itera pelos artigos e cria os cards
         newsData.slice(0, 5).forEach(newsItem => {
             const newsCard = document.createElement('div');
             newsCard.className = 'event-card';
@@ -1787,22 +2535,17 @@ async function loadNews() {
             container.appendChild(newsCard);
         });
     } catch (error) {
-        console.error('Detailed error loading news:', error);
+        console.error('Erro ao carregar notícias:', error);
         const container = document.getElementById('newsContainer');
-        container.innerHTML = `<div class="alert alert-danger">Error loading news: ${error.message}</div>`;
+        container.innerHTML = '<div class="alert alert-danger">Erro ao carregar notícias</div>';
     }
 }
 
-// Função para carregar todos os conteúdos
-async function loadAllContent() {
-    await Promise.all([loadEvents(), loadNews()]);
-}
+// Carregar notícias ao abrir a página
+document.addEventListener('DOMContentLoaded', loadNews);
 
-// Carregar conteúdo inicialmente
-loadAllContent();
-
-// Atualizar conteúdo a cada 5 minutos (300000 milissegundos)
-setInterval(loadAllContent, 20000);
+// Atualizar notícias a cada 5 minutos (300000 milissegundos)
+setInterval(loadNews, 300000);
 
 // Adicionar event listener para atualização manual (opcional)
 document.addEventListener('DOMContentLoaded', () => {
@@ -1812,45 +2555,42 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Add this to the existing <script> section in the HTML
-    function createElaboratedClock() {
-        const clockContainer = document.createElement('div');
-        clockContainer.id = 'elaborated-digital-clock';
-        clockContainer.style.position = 'absolute';
-        clockContainer.style.top = '16px';
-        clockContainer.style.right = '20px';
-        clockContainer.style.display = 'flex';
-        clockContainer.style.alignItems = 'center';
-        clockContainer.style.backgroundColor = 'transparent';
-        clockContainer.style.padding = '10px';
-        clockContainer.style.borderRadius = '10px';
-        clockContainer.style.fontFamily = '"Avenir LT Std", sans-serif';
-        clockContainer.style.color = 'white';
-        clockContainer.style.zIndex = '110';
+function createElaboratedClock() {
+    const clockContainer = document.createElement('div');
+    clockContainer.id = 'elaborated-digital-clock';
+    clockContainer.style.position = 'absolute';
+    clockContainer.style.top = '8px';
+    clockContainer.style.right = '20px';
+    clockContainer.style.display = 'flex';
+    clockContainer.style.alignItems = 'center';
+    clockContainer.style.justifyContent = 'space-between'; // Distribui espaço entre os elementos
+    clockContainer.style.backgroundColor = 'transparent';
+    clockContainer.style.padding = '10px';
+    clockContainer.style.borderRadius = '10px';
+    clockContainer.style.fontFamily = '"Avenir LT Std", sans-serif';
+    clockContainer.style.color = 'white';
+    clockContainer.style.zIndex = '110';
 
-        const dateElement = document.createElement('div');
-        dateElement.id = 'clock-date';
-        dateElement.style.marginRight = '15px';
-        dateElement.style.fontSize = '1.3rem';
-        dateElement.style.minWidth = '250px';  // Ensure consistent width
-        dateElement.style.textAlign = 'right'; // Align text to right for consistent positioning
+    const dateElement = document.createElement('div');
+    dateElement.id = 'clock-date';
+    dateElement.style.fontSize = '2.2rem';
+    dateElement.style.textAlign = 'right'; // Alinha o texto à direita
 
-        const separatorElement = document.createElement('div');
-        separatorElement.style.width = '3px';
-        separatorElement.style.height = '40px';
-        separatorElement.style.borderRadius = '40px';
-        separatorElement.style.backgroundColor = 'white';
-        separatorElement.style.position = 'absolute';
-        separatorElement.style.left = '63.4%';
-        separatorElement.style.transform = 'translateX(-50%)';
-        separatorElement.style.top = '6px';
+    const separatorElement = document.createElement('div');
+    separatorElement.style.width = '4px';
+    separatorElement.style.height = '50px';
+    separatorElement.style.borderRadius = '40px';
+    separatorElement.style.backgroundColor = 'white';
+    separatorElement.style.margin = '0 15px'; // Margem para espaçamento
 
-        const timeElement = document.createElement('div');
-        timeElement.id = 'clock-time';
-        timeElement.style.fontSize = '1.8rem';
-        timeElement.style.fontWeight = 'bold';
-        timeElement.style.display = 'flex';
-        timeElement.style.minWidth = '140px';
+    const timeElement = document.createElement('div');
+    timeElement.id = 'clock-time';
+    timeElement.style.fontSize = '2.3rem';
+    timeElement.style.fontWeight = 'bold';
+    timeElement.style.fontFamily = 'monospace'; // Fonte monoespaçada para dígitos de largura igual
+    timeElement.style.position = 'relative'; // Permite ajustar a posição vertical
+    timeElement.style.top = '-1px'; // Move as horas um pouco para cima
+
     clockContainer.appendChild(dateElement);
     clockContainer.appendChild(separatorElement);
     clockContainer.appendChild(timeElement);
@@ -1860,16 +2600,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateClock() {
         const now = new Date();
 
-        // Date formatting
+        // Formatação da data
         const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
         const dayNumber = now.getDate();
         const monthName = months[now.getMonth()];
         const year = now.getFullYear();
 
         dateElement.innerHTML = `<strong>${dayNumber}</strong> <strong>${monthName}</strong> <strong>${year}</strong>`;
 
-        // Time formatting
+        // Formatação da hora
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
@@ -1883,6 +2622,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Call the function to create and start the clock
 createElaboratedClock();
+
 
 let precipitationChart = null;
         let temperatureChart = null;
@@ -2346,5 +3086,3 @@ async function updateOrCreateTemperatureChart(data) {
         setInterval(getWeatherData, 60000);
 
     </script>
-</body>
-</html>
