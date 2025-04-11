@@ -2115,7 +2115,7 @@ function stopTermoUpdates() {
         document.getElementById('termo1-content')
     ];
 
-    const durations = [9000, 30000, 30000, 30000, 165000, 90000, 120000, 90000];
+    const durations = [90000, 30000, 30000, 30000, 165000, 90000, 120000, 90000];
 
     let currentVisibleIndex = sections.findIndex(section => section.classList.contains('visible'));
     const nextIndex = (currentVisibleIndex + 1) % sections.length;
@@ -2332,7 +2332,7 @@ function initializeContent() {
     }, 1000);
 
     // Iniciar o ciclo de alternância
-    toggleContent.timeout = setTimeout(toggleContent, 9000); // 30 segundos para "About Us"
+    toggleContent.timeout = setTimeout(toggleContent, 90000); // 30 segundos para "About Us"
 }
 
 // Call initialization when the page loads
