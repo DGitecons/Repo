@@ -1,0 +1,161 @@
+import os
+import requests
+from bs4 import BeautifulSoup
+import json
+
+# URL da página de artigos e eventos
+url_articles = "https://www.itecons.uc.pt/articles"
+url_events = "https://www.itecons.uc.pt/"
+base_url = "https://www.itecons.uc.pt"
+
+# Caminhos completos para os arquivos JSON
+json_file_articles = "C:\\xampp\\htdocs\\Code\\itecons_news.json"
+json_file_events = "C:\\xampp\\htdocs\\Code\\itecons_next.json"
+
+# Cabeçalhos para simular um navegador
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+}
+
+# Função para extrair artigos
+def fetch_articles_data(url, json_file_path):
+    try:
+        # Fazer o pedido HTTP
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+
+        # Fazer o parsing do HTML
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Lista para armazenar os dados
+        articles_data = []
+
+        # Encontrar todos os cards
+        cards = soup.find_all("a", class_="card-link bg-secondary")
+
+        # Iterar pelos cards
+        for card in cards:
+            if len(articles_data) >= 8:  # Limitar a 8 artigos
+                break
+
+            try:
+                # Extrair a imagem
+                img_tag = card.find("img", class_="card-img")
+                img_url = f"https://www.itecons.uc.pt{img_tag['src']}" if img_tag and 'src' in img_tag.attrs else "N/A"
+
+                # Encontrar a div overlay
+                overlay_div = card.find("div", class_="card-img-overlay-bottom")
+                
+                # Extrair o título
+                title_tag = overlay_div.find("h6", class_="card-title text-uppercase text-truncate font-size-sm font-weight-bold")
+                title = title_tag.text.strip() if title_tag else "N/A"
+
+                # Extrair a descrição
+                desc_tag = overlay_div.find("p", class_="card-text text-uppercase font-weight-light")
+                description = desc_tag.text.strip() if desc_tag else "N/A"
+
+                # Adicionar os dados se foram encontrados
+                if title != "N/A" or description != "N/A":
+                    article_data = {
+                        "imagem": img_url,
+                        "titulo": title,
+                        "descricao": description
+                    }
+                    articles_data.append(article_data)
+                    print(f"Artigo processado: {title}")
+
+            except Exception as e:
+                print(f"Erro ao processar um card: {str(e)}")
+                continue
+
+        # Criar o diretório se não existir
+        os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+
+        # Salvar os dados em formato JSON
+        with open(json_file_path, "w", encoding="utf-8") as jsonfile:
+            json.dump(articles_data, jsonfile, ensure_ascii=False, indent=4)
+
+        print(f"\nDados exportados para '{json_file_path}'.")
+        print(f"Número de artigos encontrados: {len(articles_data)}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar a página de artigos: {e}")
+    except Exception as e:
+        print(f"Erro ao processar os artigos: {e}")
+
+# Função para extrair eventos
+def fetch_events_data(url, json_file_path):
+    try:
+        # Fazer o pedido HTTP
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        
+        # Analisar o HTML com BeautifulSoup
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # Buscar o título geral da seção
+        section_title_div = soup.find("div", class_="text-uppercase text-center text-primary font-weight-light mb-0 h2")
+        section_title = section_title_div.text.strip() if section_title_div else ""
+
+        # Inicializar a lista para armazenar os eventos
+        events = []
+
+        # Localizar todos os elementos "card" dentro do carrossel
+        cards = soup.find_all("div", class_="card bg-light")
+
+        # Iterar por cada card encontrado
+        for card in cards:
+            # Buscar a data do evento
+            date_div = card.find("div", class_="card-date bg-primary text-white text-center")
+            day = date_div.find("div", class_="font-weight-bold mb-0 h5").text.strip() if date_div else ""
+            month = date_div.find("small", class_="text-uppercase").text.strip() if date_div else ""
+
+            # Garantir que o mês esteja em maiúsculas
+            month = month.upper() if month else ""
+
+            # Formatar data como "day month"
+            formatted_date = f"{day} {month}".strip()
+
+            # Buscar o título do evento (subtitle)
+            title_div = card.find("div", class_="card-title text-uppercase mt-2 h6")
+            subtitle = title_div.text.strip() if title_div else ""
+
+            # Buscar a descrição do evento
+            description_div = card.find("p", class_="card-text text-uppercase font-weight-light font-size-sm")
+            description = description_div.text.strip() if description_div else ""
+
+            # Buscar a imagem do evento
+            img_tag = card.find("img", class_="card-img-top")
+            img_src = img_tag["src"] if img_tag else ""
+            img_url = f"{base_url}{img_src}" if img_src else ""
+
+            # Adicionar os dados à lista de eventos
+            events.append({
+                "date": formatted_date,
+                "img": img_url,
+                "subtitle": subtitle,
+                "description": description
+            })
+
+        # Criar diretórios caso não existam
+        os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+
+        # Salvar os dados em um ficheiro JSON com a estrutura solicitada
+        output_data = {
+            "title": section_title,
+            "events": events
+        }
+
+        with open(json_file_path, "w", encoding="utf-8") as json_file:
+            json.dump(output_data, json_file, ensure_ascii=False, indent=4)
+
+        print(f"Os dados dos eventos foram extraídos e salvos em '{json_file_path}'.")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao acessar o site de eventos: {e}")
+    except Exception as e:
+        print(f"Erro ao processar os eventos: {e}")
+
+# Executar as funções para ambos os conjuntos de dados
+fetch_articles_data(url_articles, json_file_articles)
+fetch_events_data(url_events, json_file_events)
