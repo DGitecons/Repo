@@ -269,7 +269,7 @@
             margin-top: -5px;
             transform: scale(1.1);
         }
-        .icon-container:last-child img {
+        .icon-container:nth-child(5) img {
             width: 145px;
             height: 145px;
             margin-left: -3px;
@@ -277,6 +277,14 @@
             margin-bottom: 7px;
             margin-top: -12px;
             transform: scale(0.95);
+        }
+        .icon-container:last-child img {
+            width: 135px;
+            height: 135px;
+            object-fit: contain;
+            margin-bottom: px;
+            margin-top: -5px;
+            transform: scale(1.1);
         }
         .icon-text {
             text-align: center;
@@ -1368,6 +1376,10 @@
                     <img src="https://github.com/DGitecons/public/blob/main/%C3%ADcones/6_Eventos.png?raw=true" alt="Eventos">
                     <div class="icon-text">Eventos</div>
                 </div>
+                <div class="icon-container">
+                    <img src="https://raw.githubusercontent.com/DGitecons/public/refs/heads/main/%C3%ADcones/8.%20Calibra%C3%A7%C3%A3o.png?raw=true" alt="Eventos">
+                    <div class="icon-text">Calibrações</div>
+                </div>
             </div>
             <img src="https://github.com/DGitecons/arrow_Icons/blob/main/arrow_top.png?raw=true" id="arrow" alt="Seta" class="arrow-icon">
             <img src="https://github.com/DGitecons/public/blob/main/QR%20Code/1.%20Services.png?raw=true" id="qrcode" alt="QR Code" class="qr-code-img">
@@ -2103,7 +2115,7 @@ function stopTermoUpdates() {
         document.getElementById('termo1-content')
     ];
 
-    const durations = [90000, 30000, 30000, 30000, 165000, 90000, 120000, 90000];
+    const durations = [9000, 30000, 30000, 30000, 165000, 90000, 120000, 90000];
 
     let currentVisibleIndex = sections.findIndex(section => section.classList.contains('visible'));
     const nextIndex = (currentVisibleIndex + 1) % sections.length;
@@ -2320,7 +2332,7 @@ function initializeContent() {
     }, 1000);
 
     // Iniciar o ciclo de alternância
-    toggleContent.timeout = setTimeout(toggleContent, 90000); // 30 segundos para "About Us"
+    toggleContent.timeout = setTimeout(toggleContent, 9000); // 30 segundos para "About Us"
 }
 
 // Call initialization when the page loads
