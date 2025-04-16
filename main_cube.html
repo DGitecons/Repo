@@ -1956,108 +1956,210 @@ function stopTermoUpdates() {
         window.addEventListener('load', enterFullscreen);
 
 
-        /*news */
-        let noticiasTotais = [];
-        let indiceAtual = 0;
-        let paginaAtual = 1;
-        const NOTICIAS_POR_PAGINA = 4;
-        const INTERVALO_ROTACAO = 20;
-        let intervaloContagem;
-        let tempoDecorrido = 0;
+        /* news */
+let noticiasTotais = []; // Array to store all fetched news items
+let paginaAtual = 1; // Current page being displayed
+const NOTICIAS_POR_PAGINA = 4; // Number of news items per page
+const INTERVALO_ROTACAO = 20; // Seconds for each page rotation
+const INTERVALO_ATUALIZACAO_FEED = 15 * 60 * 1000; // Interval to fetch new feed data (e.g., 15 minutes in milliseconds)
 
-        function carregarRSS() {
-            const urlRSS = 'https://rr.sapo.pt/rss/rssfeed.aspx?section=section_noticias';
-            
-            fetch(urlRSS)
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data, "application/xml");
+let intervaloContagem; // Interval ID for the page rotation timer
+let tempoDecorrido = 0; // Time elapsed for the current page rotation
+let intervaloAtualizacaoFeed; // Interval ID for fetching new feed data
 
-                    const items = xmlDoc.getElementsByTagName("item");
-                    noticiasTotais = [];
+/**
+ * Fetches and processes the RSS feed.
+ */
+function carregarRSS() {
+    console.log("A carregar/atualizar feed RSS..."); // Log when fetching starts
+    const urlRSS = 'https://rr.sapo.pt/rss/rssfeed.aspx?section=section_noticias';
+    // Use a proxy if needed to avoid CORS issues, e.g., 'https://cors-anywhere.herokuapp.com/' + urlRSS
+    // Note: Public proxies might be unreliable. A dedicated server-side proxy is better.
 
-                    for (let i = 0; i < items.length; i++) {
-                        const titulo = items[i].getElementsByTagName("title")[0]?.textContent || "Título não disponível";
-                        const descricao = items[i].getElementsByTagName("description")[0]?.textContent || "";
-                        const urlImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("url");
-                        const tipoImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("type");
-                        
-                        // Adiciona notícia apenas se tiver imagem válida
-                        if (urlImagem && tipoImagem && !["video/mp4", "audio/mp3"].includes(tipoImagem)) {
-                            noticiasTotais.push({ titulo, descricao, urlImagem });
-                        }
-                    }
+    fetch(urlRSS)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(data => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data, "application/xml");
 
-                    // Verifica se há notícias carregadas
-                    if (noticiasTotais.length > 0) {
-                        atualizarPontosNavegacao();
-                        exibirNoticias();
-                    } else {
-                        console.warn('Nenhuma notícia válida encontrada no RSS.');
-                        exibirMensagemErro();
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar o RSS:', error);
-                    exibirMensagemErro();
-                });
-        }
+            // Check for parser errors
+            const parserError = xmlDoc.querySelector("parsererror");
+            if (parserError) {
+                console.error("Erro ao parsear XML:", parserError);
+                throw new Error("Falha ao parsear o feed RSS.");
+            }
 
-        function exibirMensagemErro() {
-    const containerNoticias = document.getElementById("containerNoticias");
-    containerNoticias.innerHTML = `
-        <div class="erro-carregamento">
-            <p>Não foi possível carregar as notícias no momento. Tentaremos novamente em breve...</p>
-        </div>
-    `;
-    // Tenta recarregar as notícias após 10 segundos
-    setTimeout(() => {
-        carregarRSS();
-    }, 1000); // 1000 ms = 1 segundos
+            const items = xmlDoc.getElementsByTagName("item");
+            const novasNoticias = []; // Temporary array for newly fetched items
+
+            for (let i = 0; i < items.length; i++) {
+                const titulo = items[i].getElementsByTagName("title")[0]?.textContent || "Título não disponível";
+                // Clean up description (remove potential CDATA markers if necessary)
+                let descricao = items[i].getElementsByTagName("description")[0]?.textContent || "";
+                descricao = descricao.replace("<![CDATA[", "").replace("]]>", "").trim();
+
+                const urlImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("url");
+                const tipoImagem = items[i].getElementsByTagName("enclosure")[0]?.getAttribute("type");
+
+                // Add news only if it has a valid image URL and type (not video/audio)
+                if (urlImagem && tipoImagem && !["video/mp4", "audio/mp3"].includes(tipoImagem)) {
+                    novasNoticias.push({ titulo, descricao, urlImagem });
+                }
+            }
+
+            // Check if new news items were actually found
+            if (novasNoticias.length > 0) {
+                console.log(`Feed carregado com sucesso. ${novasNoticias.length} notícias encontradas.`);
+                noticiasTotais = novasNoticias; // Replace old news with the fresh ones
+                paginaAtual = 1; // Reset to the first page
+                tempoDecorrido = 0; // Reset timer progress
+                atualizarPontosNavegacao(); // Update navigation dots
+                exibirNoticias(); // Display the first page of the new news
+            } else {
+                console.warn('Nenhuma notícia válida encontrada no RSS desta vez.');
+                // Optionally, keep displaying old news or show a specific message
+                // If noticiasTotais is already empty, show the error message
+                if (noticiasTotais.length === 0) {
+                   exibirMensagemErro('Nenhuma notícia válida encontrada no feed.');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar o RSS:', error);
+            // Display error message only if there are no news items currently displayed
+             if (noticiasTotais.length === 0) {
+                 exibirMensagemErro('Não foi possível carregar as notícias.');
+             }
+             // Keep the update interval running to try again later
+        });
 }
 
-        function atualizarPontosNavegacao() {
-            const infoPaginas = document.getElementById("infoPaginas");
-            const totalPaginas = Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA);
-            
-            infoPaginas.innerHTML = '';
-            
-            for (let i = 0; i < totalPaginas; i++) {
-                const ponto = document.createElement("div");
-                ponto.classList.add("ponto-pagina");
-                if (i === paginaAtual - 1) {
-                    ponto.classList.add("ativo");
-                }
-                infoPaginas.appendChild(ponto);
-            }
-        }
+/**
+ * Displays an error message in the news container.
+ * @param {string} mensagem - The message to display.
+ */
+function exibirMensagemErro(mensagem = 'Não foi possível carregar as notícias no momento.') {
+    const containerNoticias = document.getElementById("containerNoticias");
+    if (!containerNoticias) return; // Exit if container doesn't exist
 
-        function exibirNoticias() {
+    // Clear existing timers to prevent conflicts
+    clearInterval(intervaloContagem);
+
+    containerNoticias.innerHTML = `
+        <div class="erro-carregamento" style="padding: 20px; text-align: center; color: #555;">
+            <p>${mensagem}</p>
+            <p>Tentaremos novamente mais tarde...</p>
+        </div>
+    `;
+    // Clear navigation dots and progress bar as there's nothing to show
+    const infoPaginas = document.getElementById("infoPaginas");
+    if (infoPaginas) infoPaginas.innerHTML = '';
+    const barraProgresso = document.getElementById("barraProgresso");
+     if (barraProgresso) barraProgresso.style.width = '0%';
+
+    // No automatic retry here - the main interval will handle retries.
+    // Avoid recursive calls or tight loops on error.
+}
+
+
+/**
+ * Updates the navigation dots based on the total number of pages.
+ */
+function atualizarPontosNavegacao() {
+    const infoPaginas = document.getElementById("infoPaginas");
+    if (!infoPaginas || noticiasTotais.length === 0) return; // Exit if container or news don't exist
+
+    const totalPaginas = Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA);
+    infoPaginas.innerHTML = ''; // Clear existing dots
+
+    // Don't show dots if there's only one page
+    if (totalPaginas <= 1) {
+        return;
+    }
+
+    for (let i = 0; i < totalPaginas; i++) {
+        const ponto = document.createElement("div");
+        ponto.classList.add("ponto-pagina");
+        // Add 'ativo' class to the dot corresponding to the current page
+        if (i === paginaAtual - 1) {
+            ponto.classList.add("ativo");
+        }
+        infoPaginas.appendChild(ponto);
+    }
+}
+
+/**
+ * Displays the news items for the current page.
+ */
+ function exibirNoticias() {
     const containerNoticias = document.getElementById("containerNoticias");
 
-    clearInterval(intervaloContagem);
-    tempoDecorrido = 0;
+    // Exit if the container doesn't exist or if there are no news items at all.
+    if (!containerNoticias || noticiasTotais.length === 0) {
+        console.warn("Container de notícias não encontrado ou lista de notícias vazia.");
+        // Ensure an error message or placeholder is shown if appropriate
+        if (containerNoticias && !document.querySelector('.erro-carregamento')) {
+             exibirMensagemErro("Não há notícias para exibir.");
+        }
+        // Clear navigation and progress bar if they exist
+        const infoPaginas = document.getElementById("infoPaginas");
+        if (infoPaginas) infoPaginas.innerHTML = '';
+        const barraProgresso = document.getElementById("barraProgresso");
+        if (barraProgresso) barraProgresso.style.width = '0%';
+        clearInterval(intervaloContagem); // Stop any running timer
+        return;
+    }
 
+    // Clear any existing rotation timer before starting a new one
+    clearInterval(intervaloContagem);
+    tempoDecorrido = 0; // Reset elapsed time for the new page
+
+    // Update active state for navigation dots
     const pontos = document.querySelectorAll(".ponto-pagina");
     pontos.forEach((ponto, index) => {
         ponto.classList.toggle("ativo", index === paginaAtual - 1);
     });
 
-    containerNoticias.innerHTML = ''; // Reiniciar conteúdo
+    containerNoticias.innerHTML = ''; // Clear previous news items
     const inicioIndice = (paginaAtual - 1) * NOTICIAS_POR_PAGINA;
+    const totalNoticiasDisponiveis = noticiasTotais.length; // Total number of unique news items
+
+    // --- Modification Start: Loop exactly NOTICIAS_POR_PAGINA times ---
+    console.log(`A exibir página ${paginaAtual}. Índice inicial (baseado na página): ${inicioIndice}. Total de notícias disponíveis: ${totalNoticiasDisponiveis}`);
 
     for (let i = 0; i < NOTICIAS_POR_PAGINA; i++) {
-        const indiceNoticia = (inicioIndice + i) % noticiasTotais.length;
+        // Calculate the target index based on the start index and loop iteration
+        const targetIndex = inicioIndice + i;
+
+        // Use the modulo operator (%) to wrap the index around the available news items.
+        // This ensures that if targetIndex exceeds the bounds, it starts from the beginning.
+        const indiceNoticia = targetIndex % totalNoticiasDisponiveis;
+
+        // Get the news item using the calculated wrapped index
         const noticia = noticiasTotais[indiceNoticia];
 
+        // Safety check in case something went wrong (e.g., noticiasTotais became empty unexpectedly)
+        if (!noticia) {
+            console.error(`Erro: Não foi possível obter notícia no índice ${indiceNoticia} (target: ${targetIndex})`);
+            continue; // Skip this iteration
+        }
+
+        console.log(`  - Slot ${i+1}: targetIndex=${targetIndex}, finalIndex=${indiceNoticia}, Título: ${noticia.titulo.substring(0,20)}...`);
+
+
         const itemNoticia = document.createElement("div");
+        // Add classes for styling and potential animations
         itemNoticia.classList.add("item-noticia", "ativo", "fade-in");
 
         itemNoticia.innerHTML = `
             <div class="imagem-noticia-container">
-                <img src="${noticia.urlImagem}" alt="Imagem da notícia" loading="lazy" 
-                    onerror="this.onerror=null; this.src='fallback-image.jpg';">
+                <img src="${noticia.urlImagem}" alt="Imagem da notícia: ${noticia.titulo}" loading="lazy"
+                     onerror="this.onerror=null; this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível'; this.alt='Imagem indisponível'">
             </div>
             <div class="conteudo-noticia">
                 <h3>${noticia.titulo}</h3>
@@ -2067,41 +2169,116 @@ function stopTermoUpdates() {
 
         containerNoticias.appendChild(itemNoticia);
     }
+    // --- Modification End ---
 
-    iniciarContagemRegressiva();
+
+    // Calculate total logical pages based on the total unique news items
+    const totalPaginas = Math.ceil(totalNoticiasDisponiveis / NOTICIAS_POR_PAGINA);
+
+    // Only start the countdown if there are multiple logical pages
+    if (totalPaginas > 1) {
+        iniciarContagemRegressiva();
+    } else {
+        // If only one logical page, hide progress bar
+        const barraProgresso = document.getElementById("barraProgresso");
+        if(barraProgresso) {
+             barraProgresso.style.transition = 'none';
+             barraProgresso.style.width = '0%';
+        }
+    }
 }
 
 
-        function iniciarContagemRegressiva() {
+/**
+ * Starts the countdown timer for rotating to the next page.
+ */
+ function iniciarContagemRegressiva() {
     const barraProgresso = document.getElementById("barraProgresso");
 
-    tempoDecorrido = 0;
+    // 1. Verifica se a barra existe e se há notícias suficientes para paginação
+    if (!barraProgresso || noticiasTotais.length <= NOTICIAS_POR_PAGINA) {
+        // Se não houver barra ou só houver uma página, esconde a barra e sai
+        console.log("Barra de progresso não necessária (elemento não encontrado ou página única).");
+        if (barraProgresso) {
+            barraProgresso.style.transition = 'none'; // Remove transições pendentes
+            barraProgresso.style.width = '0%';     // Garante que está escondida/sem largura
+            // Poderia também definir display: none ou opacity: 0 se for relevante no seu CSS
+            // barraProgresso.style.display = 'none';
+        }
+        return; // Não inicia a contagem
+    }
 
-    // Redefinir a largura da barra imediatamente
-    barraProgresso.style.transition = "none"; // Desativar transição para redefinir instantaneamente
-    barraProgresso.style.width = "100%";
+    console.log("Iniciando contagem regressiva para a página atual...");
 
-    // Pequeno atraso para reiniciar a animação suavemente
+    tempoDecorrido = 0; // Reseta o tempo decorrido
+
+    // --- Refinamento para garantir visibilidade inicial ---
+    // 2. Reset explícito e garantia de visibilidade ANTES da animação
+    barraProgresso.style.transition = "none"; // Desativa transições temporariamente
+    // Garanta que a barra está visível (ajuste conforme o seu CSS)
+    // Exemplos (use o que for aplicável):
+    barraProgresso.style.opacity = '1';
+    // barraProgresso.style.display = 'block'; // ou 'flex', etc., se estava escondida com display
+    // barraProgresso.style.visibility = 'visible'; // se estava escondida com visibility
+
+    barraProgresso.style.width = "100%"; // Define largura para 100% instantaneamente
+
+    // 3. Forçar Reflow (opcional, mas pode ajudar a sincronizar)
+    // Ler uma propriedade como offsetWidth força o browser a recalcular o layout
+    void barraProgresso.offsetWidth;
+    // --- Fim do Refinamento ---
+
+    // 4. Pequeno atraso para permitir renderização do reset
+    // Usa um timeout mínimo para dar tempo ao browser de aplicar o estado de 100%
+    // antes de iniciar a animação de descida para 0%.
     setTimeout(() => {
-        barraProgresso.style.transition = "width linear"; // Restaurar transição
-        intervaloContagem = setInterval(() => {
-            tempoDecorrido += 0.1;
-            const percentagemRestante = Math.max(0, 100 - (tempoDecorrido / INTERVALO_ROTACAO) * 100);
-            barraProgresso.style.width = `${percentagemRestante}%`;
+        console.log("Aplicando transição de largura da barra...");
+        // 5. Reativa a transição e inicia a animação
+        barraProgresso.style.transition = `width ${INTERVALO_ROTACAO}s linear`;
+        barraProgresso.style.width = "0%"; // Inicia a animação para 0%
 
+        // Limpa qualquer intervalo anterior para segurança
+        clearInterval(intervaloContagem);
+
+        // 6. Inicia intervalo para detetar o fim da animação/tempo
+        intervaloContagem = setInterval(() => {
+            tempoDecorrido += 0.1; // Incrementa tempo (aproximação)
+
+            // Quando o tempo decorrido atingir o intervalo de rotação
             if (tempoDecorrido >= INTERVALO_ROTACAO) {
-                clearInterval(intervaloContagem);
-                // Avança para próxima página
-                paginaAtual = paginaAtual % Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA) + 1;
-                exibirNoticias();
+                console.log("Tempo de rotação concluído.");
+                clearInterval(intervaloContagem); // Para este intervalo
+
+                // Calcula o número total de páginas
+                const totalPaginas = Math.ceil(noticiasTotais.length / NOTICIAS_POR_PAGINA);
+
+                // Avança para a próxima página (com wrap around)
+                paginaAtual = (paginaAtual % totalPaginas) + 1;
+                console.log(`Avançando para a página ${paginaAtual}`);
+
+                exibirNoticias(); // Exibe a próxima página (que chamará esta função novamente se > 1 página)
             }
-        }, 100);
-    }, 50); // Delay para garantir a redefinição antes do próximo cálculo
+        }, 100); // Verifica a cada 100ms
+    }, 50); // Atraso de 50ms antes de iniciar a animação
 }
-        // Adiciona erro de imagem e listener de carregamento
-        document.addEventListener("DOMContentLoaded", () => {
-            carregarRSS();
-        })
+
+/**
+ * Initializes the news display and sets up periodic updates.
+ */
+function inicializarNoticias() {
+    // Initial load
+    carregarRSS();
+
+    // Clear any existing feed update interval before setting a new one
+    clearInterval(intervaloAtualizacaoFeed);
+
+    // Set up periodic fetching of the RSS feed
+    intervaloAtualizacaoFeed = setInterval(carregarRSS, INTERVALO_ATUALIZACAO_FEED);
+}
+
+
+// Add event listener to initialize everything when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", inicializarNoticias);
 
         function toggleContent() {
     const sections = [
